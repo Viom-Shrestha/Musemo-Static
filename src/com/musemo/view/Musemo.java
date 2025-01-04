@@ -1,7 +1,10 @@
 package com.musemo.view;
 
 import com.musemo.controller.ValidationUtil;
+import com.musemo.controller.algorithms.*;
+import com.musemo.controller.datastructure.CustomQueue;
 import com.musemo.model.ArtifactModel;
+import com.musemo.model.VisitorModel;
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,14 +15,23 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * This class is contains codes related to the visible aspect of the project.
+ *
+ * Using JFrame it creates the front end and handles all the designing aspect.
  *
  * @author Viom Shrestha 23048612
  */
 public class Musemo extends javax.swing.JFrame {
 
     private List<ArtifactModel> artifactList;
+    private List<VisitorModel> visitorList;
     private java.awt.CardLayout cardLayout;
     private final ValidationUtil validationUtil;
+    private final SelectionSort selectionSort;
+    private final InsertionSort insertionSort;
+    private final MergeSort mergeSort;
+    private final BinarySearch binarySearch;
+    private CustomQueue queueList;
     private final Color errorColor = new Color(255, 51, 0);
     private final Color greenColor = new Color(0, 255, 102);
 
@@ -29,6 +41,10 @@ public class Musemo extends javax.swing.JFrame {
     public Musemo() {
         initComponents();
         validationUtil = new ValidationUtil();
+        selectionSort = new SelectionSort();
+        insertionSort = new InsertionSort();
+        mergeSort = new MergeSort();
+        binarySearch = new BinarySearch();
         initializeLayout(); // Sets up CardLayout and pages
         initializaData(); // Initialize Objct data and Object table
         startProgress(); // Simulates the loading bar
@@ -50,7 +66,6 @@ public class Musemo extends javax.swing.JFrame {
         scrlPaneHome = new javax.swing.JScrollPane();
         pnlHome = new javax.swing.JPanel();
         btnAdminLogin = new javax.swing.JButton();
-        btnBookNowPH = new javax.swing.JButton();
         lblHomePageWelcome1 = new javax.swing.JLabel();
         pnlAboutPage = new javax.swing.JPanel();
         lblFounderMessage = new javax.swing.JLabel();
@@ -72,12 +87,13 @@ public class Musemo extends javax.swing.JFrame {
         lblDashboard = new javax.swing.JLabel();
         btnManageArtifacts = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        btnManageVisitorQueue = new javax.swing.JButton();
         pnlManageArtifacts = new javax.swing.JPanel();
-        lblManageBojectsHeader = new javax.swing.JLabel();
+        lblManageArtifactsHeader = new javax.swing.JLabel();
         spTblObjects = new javax.swing.JScrollPane();
         tblArtifact = new javax.swing.JTable();
         lblTabletitle = new javax.swing.JLabel();
-        pnlForm = new javax.swing.JPanel();
+        pnlArtifactForm = new javax.swing.JPanel();
         txtFldArtifactId = new javax.swing.JTextField();
         txtFldArtifactName = new javax.swing.JTextField();
         cmbBoxArtifactType = new javax.swing.JComboBox<>();
@@ -90,7 +106,7 @@ public class Musemo extends javax.swing.JFrame {
         btnAddArtifact = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
-        btnClear = new javax.swing.JButton();
+        btnClearArtifact = new javax.swing.JButton();
         lblErrorMsgArtifactName = new javax.swing.JLabel();
         lblErrorMsgArtifactId = new javax.swing.JLabel();
         lblErrorMsgArtifactType = new javax.swing.JLabel();
@@ -101,8 +117,39 @@ public class Musemo extends javax.swing.JFrame {
         lblErrorMsgFloor = new javax.swing.JLabel();
         lblErrorMsgRoomNo = new javax.swing.JLabel();
         btnBackToHome1 = new javax.swing.JButton();
+        cmbBoxSortBy = new javax.swing.JComboBox<>();
+        cmbBoxOrderBy = new javax.swing.JComboBox<>();
+        btnSort = new javax.swing.JButton();
+        txtFldSearchValue = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        lblErrorMsgSearchBy = new javax.swing.JLabel();
+        lblErrorMsgSortBy = new javax.swing.JLabel();
+        lblErrorMsgOrderBy = new javax.swing.JLabel();
+        cmbBoxSearchBy = new javax.swing.JComboBox<>();
+        pnlManageVisitors = new javax.swing.JPanel();
+        lblManageVisitorsHeader = new javax.swing.JLabel();
+        btnBackToHome2 = new javax.swing.JButton();
+        lblVisitorQueue = new javax.swing.JLabel();
+        lblVisitorQueueCount = new javax.swing.JLabel();
+        lblVisitorQueueCountLabel1 = new javax.swing.JLabel();
+        lblVisitorQueue1 = new javax.swing.JLabel();
+        btnNextVisitor = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblVisitorQueue = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblVisitorArchive = new javax.swing.JTable();
+        txtFldVisitorName = new javax.swing.JTextField();
+        cmbBoxVisitorType = new javax.swing.JComboBox<>();
+        txtFldVisitorId = new javax.swing.JTextField();
+        cmbBoxGender = new javax.swing.JComboBox<>();
+        btnAddVisitor = new javax.swing.JButton();
+        lblErrorMsgVisitorId = new javax.swing.JLabel();
+        lblErrorMsgVisitorName = new javax.swing.JLabel();
+        lblErrorMsgVisitorType = new javax.swing.JLabel();
+        lblErrorMsgGender = new javax.swing.JLabel();
+        btnClearVisitor = new javax.swing.JButton();
         pnlLoadingScreen = new javax.swing.JPanel();
-        lblloading = new javax.swing.JLabel();
+        lblLoading = new javax.swing.JLabel();
         prgBarLoadingScreen = new javax.swing.JProgressBar();
         lblLoadingTitle = new javax.swing.JLabel();
         lblLoadingScreenGif = new javax.swing.JLabel();
@@ -113,7 +160,7 @@ public class Musemo extends javax.swing.JFrame {
         pnlHomeScreen.setMinimumSize(new java.awt.Dimension(1300, 700));
         pnlHomeScreen.setPreferredSize(new java.awt.Dimension(1300, 700));
 
-        lblHomePageHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AllPageHeader.png"))); // NOI18N
+        lblHomePageHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/allPageHeader.png"))); // NOI18N
 
         jTabbedPane1.setBackground(new java.awt.Color(1, 127, 132));
         jTabbedPane1.setMaximumSize(new java.awt.Dimension(1300, 500));
@@ -121,6 +168,7 @@ public class Musemo extends javax.swing.JFrame {
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(1300, 500));
 
         scrlPaneHome.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrlPaneHome.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         pnlHome.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -133,21 +181,10 @@ public class Musemo extends javax.swing.JFrame {
                 btnAdminLoginActionPerformed(evt);
             }
         });
-        pnlHome.add(btnAdminLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        pnlHome.add(btnAdminLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
-        btnBookNowPH.setBackground(new java.awt.Color(153, 153, 255));
-        btnBookNowPH.setFont(new java.awt.Font("Poor Richard", 1, 18)); // NOI18N
-        btnBookNowPH.setForeground(new java.awt.Color(0, 0, 0));
-        btnBookNowPH.setText("Book Now");
-        btnBookNowPH.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBookNowPHActionPerformed(evt);
-            }
-        });
-        pnlHome.add(btnBookNowPH, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 630, 110, 40));
-
-        lblHomePageWelcome1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/HomePageImg.png"))); // NOI18N
-        pnlHome.add(lblHomePageWelcome1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        lblHomePageWelcome1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/homePageImg.png"))); // NOI18N
+        pnlHome.add(lblHomePageWelcome1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 750));
 
         scrlPaneHome.setViewportView(pnlHome);
 
@@ -158,7 +195,7 @@ public class Musemo extends javax.swing.JFrame {
         pnlAboutPage.setMinimumSize(new java.awt.Dimension(1300, 700));
         pnlAboutPage.setPreferredSize(new java.awt.Dimension(1300, 700));
 
-        lblFounderMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AboutPageMessage.jpg"))); // NOI18N
+        lblFounderMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/aboutPageMessage.jpg"))); // NOI18N
 
         lblAboutUsTitle.setBackground(new java.awt.Color(255, 255, 255));
         lblAboutUsTitle.setFont(new java.awt.Font("Poor Richard", 1, 36)); // NOI18N
@@ -253,21 +290,11 @@ public class Musemo extends javax.swing.JFrame {
         txtFldAdminLogin.setForeground(new java.awt.Color(153, 153, 255));
         txtFldAdminLogin.setText("v");
         txtFldAdminLogin.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 2), "Username", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(153, 153, 255))); // NOI18N
-        txtFldAdminLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldAdminLoginActionPerformed(evt);
-            }
-        });
 
         pwdFldAdminLogin.setBackground(new java.awt.Color(1, 0, 59));
         pwdFldAdminLogin.setForeground(new java.awt.Color(234, 192, 32));
         pwdFldAdminLogin.setText("v");
         pwdFldAdminLogin.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 2), "Password", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(153, 153, 255))); // NOI18N
-        pwdFldAdminLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pwdFldAdminLoginActionPerformed(evt);
-            }
-        });
 
         btnLogin.setBackground(new java.awt.Color(255, 255, 255));
         btnLogin.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
@@ -283,7 +310,7 @@ public class Musemo extends javax.swing.JFrame {
         lblLoginError.setForeground(new java.awt.Color(255, 0, 0));
         lblLoginError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        lblLoginIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/LoginImg.jpg"))); // NOI18N
+        lblLoginIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/loginImg.jpg"))); // NOI18N
 
         lblLoginMessage1.setBackground(new java.awt.Color(255, 255, 255));
         lblLoginMessage1.setFont(new java.awt.Font("Poor Richard", 1, 26)); // NOI18N
@@ -296,10 +323,6 @@ public class Musemo extends javax.swing.JFrame {
             pnlAdminLoginScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAdminLoginScreenLayout.createSequentialGroup()
                 .addGroup(pnlAdminLoginScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlAdminLoginScreenLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdminLoginScreenLayout.createSequentialGroup()
                         .addContainerGap(69, Short.MAX_VALUE)
                         .addGroup(pnlAdminLoginScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +339,11 @@ public class Musemo extends javax.swing.JFrame {
                                                 .addComponent(txtFldAdminLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGap(17, 17, 17))))))
-                        .addGap(51, 51, 51)))
+                        .addGap(51, 51, 51))
+                    .addGroup(pnlAdminLoginScreenLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(lblLoginIcon))
         );
         pnlAdminLoginScreenLayout.setVerticalGroup(
@@ -345,13 +372,13 @@ public class Musemo extends javax.swing.JFrame {
         pnlAdminDashboardScreen.setMinimumSize(new java.awt.Dimension(1300, 700));
         pnlAdminDashboardScreen.setPreferredSize(new java.awt.Dimension(1300, 700));
 
-        lblHomePageHeader1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AllPageHeader.png"))); // NOI18N
+        lblHomePageHeader1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/allPageHeader.png"))); // NOI18N
 
         lblDashboardTitle.setFont(new java.awt.Font("Poor Richard", 1, 36)); // NOI18N
         lblDashboardTitle.setForeground(new java.awt.Color(255, 255, 255));
         lblDashboardTitle.setText("Dashboard");
 
-        lblDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AdminDashBoard.jpg"))); // NOI18N
+        lblDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/adminDashBoard.jpg"))); // NOI18N
 
         btnManageArtifacts.setBackground(new java.awt.Color(255, 255, 255));
         btnManageArtifacts.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -373,6 +400,16 @@ public class Musemo extends javax.swing.JFrame {
             }
         });
 
+        btnManageVisitorQueue.setBackground(new java.awt.Color(255, 255, 255));
+        btnManageVisitorQueue.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnManageVisitorQueue.setForeground(new java.awt.Color(0, 0, 0));
+        btnManageVisitorQueue.setText("Manage Visitor");
+        btnManageVisitorQueue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageVisitorQueueActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlAdminDashboardScreenLayout = new javax.swing.GroupLayout(pnlAdminDashboardScreen);
         pnlAdminDashboardScreen.setLayout(pnlAdminDashboardScreenLayout);
         pnlAdminDashboardScreenLayout.setHorizontalGroup(
@@ -382,10 +419,12 @@ public class Musemo extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addComponent(lblDashboardTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnManageVisitorQueue)
                 .addGap(18, 18, 18)
                 .addComponent(btnManageArtifacts)
-                .addGap(47, 47, 47))
+                .addGap(18, 18, 18)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdminDashboardScreenLayout.createSequentialGroup()
                 .addComponent(lblDashboard)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -397,13 +436,14 @@ public class Musemo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(pnlAdminDashboardScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdminDashboardScreenLayout.createSequentialGroup()
+                        .addComponent(lblDashboardTitle)
+                        .addGap(9, 9, 9))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdminDashboardScreenLayout.createSequentialGroup()
                         .addGroup(pnlAdminDashboardScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnManageArtifacts)
-                            .addComponent(btnLogout))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdminDashboardScreenLayout.createSequentialGroup()
-                        .addComponent(lblDashboardTitle)
-                        .addGap(9, 9, 9)))
+                            .addComponent(btnLogout)
+                            .addComponent(btnManageVisitorQueue))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(lblDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -413,7 +453,7 @@ public class Musemo extends javax.swing.JFrame {
         pnlManageArtifacts.setMinimumSize(new java.awt.Dimension(1300, 700));
         pnlManageArtifacts.setPreferredSize(new java.awt.Dimension(1300, 700));
 
-        lblManageBojectsHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AllPageHeader.png"))); // NOI18N
+        lblManageArtifactsHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/allPageHeader.png"))); // NOI18N
 
         tblArtifact.setBackground(new java.awt.Color(153, 153, 255));
         tblArtifact.setForeground(new java.awt.Color(0, 0, 0));
@@ -463,103 +503,58 @@ public class Musemo extends javax.swing.JFrame {
         lblTabletitle.setForeground(new java.awt.Color(255, 255, 255));
         lblTabletitle.setText("Artifacts  Table");
 
-        pnlForm.setBackground(new java.awt.Color(137, 136, 246));
-        pnlForm.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Artifact Form", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Poor Richard", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
-        pnlForm.setMaximumSize(new java.awt.Dimension(1080, 960));
-        pnlForm.setMinimumSize(new java.awt.Dimension(1080, 960));
-        pnlForm.setPreferredSize(new java.awt.Dimension(900, 300));
+        pnlArtifactForm.setBackground(new java.awt.Color(137, 136, 246));
+        pnlArtifactForm.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Artifact Form", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Poor Richard", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        pnlArtifactForm.setMaximumSize(new java.awt.Dimension(1080, 960));
+        pnlArtifactForm.setMinimumSize(new java.awt.Dimension(1080, 960));
+        pnlArtifactForm.setPreferredSize(new java.awt.Dimension(900, 300));
 
         txtFldArtifactId.setBackground(new java.awt.Color(0, 0, 0));
         txtFldArtifactId.setForeground(new java.awt.Color(255, 255, 255));
         txtFldArtifactId.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Artifact Id", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldArtifactId.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldArtifactId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldArtifactIdActionPerformed(evt);
-            }
-        });
 
         txtFldArtifactName.setBackground(new java.awt.Color(0, 0, 0));
         txtFldArtifactName.setForeground(new java.awt.Color(255, 255, 255));
         txtFldArtifactName.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Artifact Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldArtifactName.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldArtifactName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldArtifactNameActionPerformed(evt);
-            }
-        });
 
         cmbBoxArtifactType.setBackground(new java.awt.Color(0, 0, 0));
         cmbBoxArtifactType.setForeground(new java.awt.Color(255, 255, 255));
         cmbBoxArtifactType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Painting", "Sculpture", "Relic", "Fossil", "Others" }));
         cmbBoxArtifactType.setSelectedIndex(-1);
         cmbBoxArtifactType.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Artifact Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
-        cmbBoxArtifactType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBoxArtifactTypeActionPerformed(evt);
-            }
-        });
 
         txtFldCreator.setBackground(new java.awt.Color(0, 0, 0));
         txtFldCreator.setForeground(new java.awt.Color(255, 255, 255));
         txtFldCreator.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Creator", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldCreator.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldCreator.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldCreatorActionPerformed(evt);
-            }
-        });
 
         txtFldStatus.setBackground(new java.awt.Color(0, 0, 0));
         txtFldStatus.setForeground(new java.awt.Color(255, 255, 255));
         txtFldStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Status", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldStatus.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldStatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldStatusActionPerformed(evt);
-            }
-        });
 
         txtFldOrigin.setBackground(new java.awt.Color(0, 0, 0));
         txtFldOrigin.setForeground(new java.awt.Color(255, 255, 255));
         txtFldOrigin.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Origin", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldOrigin.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldOrigin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldOriginActionPerformed(evt);
-            }
-        });
 
         txtFldRoom.setBackground(new java.awt.Color(0, 0, 0));
         txtFldRoom.setForeground(new java.awt.Color(255, 255, 255));
         txtFldRoom.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Room", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldRoom.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldRoom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldRoomActionPerformed(evt);
-            }
-        });
 
         txtFldFloor.setBackground(new java.awt.Color(0, 0, 0));
         txtFldFloor.setForeground(new java.awt.Color(255, 255, 255));
         txtFldFloor.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Floor", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldFloor.setCaretColor(new java.awt.Color(0, 102, 102));
-        txtFldFloor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFldFloorActionPerformed(evt);
-            }
-        });
 
         cmbBoxCondition.setBackground(new java.awt.Color(0, 0, 0));
         cmbBoxCondition.setForeground(new java.awt.Color(255, 255, 255));
         cmbBoxCondition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Excellent", "Good", "Bad", "Needs Restoration", "Damaged" }));
         cmbBoxCondition.setSelectedIndex(-1);
         cmbBoxCondition.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Condition", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
-        cmbBoxCondition.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBoxConditionActionPerformed(evt);
-            }
-        });
 
         btnAddArtifact.setBackground(new java.awt.Color(153, 255, 204));
         btnAddArtifact.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -591,13 +586,13 @@ public class Musemo extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setBackground(new java.awt.Color(153, 255, 204));
-        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnClear.setForeground(new java.awt.Color(0, 0, 0));
-        btnClear.setText("Clear");
-        btnClear.addActionListener(new java.awt.event.ActionListener() {
+        btnClearArtifact.setBackground(new java.awt.Color(153, 255, 204));
+        btnClearArtifact.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnClearArtifact.setForeground(new java.awt.Color(0, 0, 0));
+        btnClearArtifact.setText("Clear");
+        btnClearArtifact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
+                btnClearArtifactActionPerformed(evt);
             }
         });
 
@@ -619,77 +614,77 @@ public class Musemo extends javax.swing.JFrame {
 
         lblErrorMsgRoomNo.setForeground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout pnlFormLayout = new javax.swing.GroupLayout(pnlForm);
-        pnlForm.setLayout(pnlFormLayout);
-        pnlFormLayout.setHorizontalGroup(
-            pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlFormLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlArtifactFormLayout = new javax.swing.GroupLayout(pnlArtifactForm);
+        pnlArtifactForm.setLayout(pnlArtifactFormLayout);
+        pnlArtifactFormLayout.setHorizontalGroup(
+            pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlArtifactFormLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
-                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createSequentialGroup()
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlArtifactFormLayout.createSequentialGroup()
+                        .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createSequentialGroup()
                                 .addComponent(lblErrorMsgFloor, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(lblErrorMsgRoomNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createSequentialGroup()
-                                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(pnlFormLayout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createSequentialGroup()
+                                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(pnlArtifactFormLayout.createSequentialGroup()
                                             .addComponent(lblErrorMsgOrigin, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(lblErrorMsgCondition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createSequentialGroup()
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createSequentialGroup()
                                             .addComponent(txtFldFloor, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(18, 18, 18)
                                             .addComponent(txtFldRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createSequentialGroup()
-                                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createSequentialGroup()
+                                        .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(btnAddArtifact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                                            .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                            .addComponent(btnClearArtifact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(617, 617, 617))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
-                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlArtifactFormLayout.createSequentialGroup()
+                        .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtFldArtifactName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlFormLayout.createSequentialGroup()
+                            .addGroup(pnlArtifactFormLayout.createSequentialGroup()
                                 .addComponent(txtFldCreator, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtFldStatus))
                             .addComponent(lblErrorMsgArtifactName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFormLayout.createSequentialGroup()
-                                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlArtifactFormLayout.createSequentialGroup()
+                                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(txtFldOrigin, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
                                     .addComponent(lblErrorMsgCreator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblErrorMsgStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(pnlFormLayout.createSequentialGroup()
+                                    .addGroup(pnlArtifactFormLayout.createSequentialGroup()
                                         .addComponent(cmbBoxCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(pnlFormLayout.createSequentialGroup()
-                                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlArtifactFormLayout.createSequentialGroup()
+                                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtFldArtifactId)
                                     .addComponent(lblErrorMsgArtifactId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(lblErrorMsgArtifactType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cmbBoxArtifactType, 0, 207, Short.MAX_VALUE))))
                         .addGap(616, 616, 616))))
         );
-        pnlFormLayout.setVerticalGroup(
-            pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlFormLayout.createSequentialGroup()
+        pnlArtifactFormLayout.setVerticalGroup(
+            pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlArtifactFormLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtFldArtifactId, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbBoxArtifactType, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblErrorMsgArtifactType, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                     .addComponent(lblErrorMsgArtifactId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -697,36 +692,36 @@ public class Musemo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblErrorMsgArtifactName, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtFldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFldCreator, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblErrorMsgStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorMsgCreator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtFldOrigin, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbBoxCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblErrorMsgOrigin, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorMsgCondition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtFldFloor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFldRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblErrorMsgRoomNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorMsgFloor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddArtifact, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClearArtifact, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(289, 289, 289))
         );
@@ -741,40 +736,399 @@ public class Musemo extends javax.swing.JFrame {
             }
         });
 
+        cmbBoxSortBy.setBackground(new java.awt.Color(255, 255, 255));
+        cmbBoxSortBy.setForeground(new java.awt.Color(0, 0, 0));
+        cmbBoxSortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Artifact Id", "Artifact Name", "Floor" }));
+        cmbBoxSortBy.setSelectedIndex(-1);
+        cmbBoxSortBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sort By", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        cmbBoxSortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBoxSortByActionPerformed(evt);
+            }
+        });
+
+        cmbBoxOrderBy.setBackground(new java.awt.Color(255, 255, 255));
+        cmbBoxOrderBy.setForeground(new java.awt.Color(0, 0, 0));
+        cmbBoxOrderBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
+        cmbBoxOrderBy.setSelectedIndex(-1);
+        cmbBoxOrderBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Order By", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        cmbBoxOrderBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBoxOrderByActionPerformed(evt);
+            }
+        });
+
+        btnSort.setBackground(new java.awt.Color(255, 255, 255));
+        btnSort.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSort.setForeground(new java.awt.Color(102, 0, 153));
+        btnSort.setText("Sort");
+        btnSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortActionPerformed(evt);
+            }
+        });
+
+        txtFldSearchValue.setBackground(new java.awt.Color(255, 255, 255));
+        txtFldSearchValue.setForeground(new java.awt.Color(0, 0, 0));
+        txtFldSearchValue.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Search", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        txtFldSearchValue.setCaretColor(new java.awt.Color(0, 102, 102));
+
+        btnSearch.setBackground(new java.awt.Color(255, 255, 255));
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/search.png"))); // NOI18N
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        lblErrorMsgSearchBy.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblErrorMsgSortBy.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblErrorMsgOrderBy.setForeground(new java.awt.Color(255, 255, 255));
+
+        cmbBoxSearchBy.setBackground(new java.awt.Color(255, 255, 255));
+        cmbBoxSearchBy.setForeground(new java.awt.Color(0, 0, 0));
+        cmbBoxSearchBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Artifact Id", "Artifact Name", "Floor" }));
+        cmbBoxSearchBy.setSelectedIndex(-1);
+        cmbBoxSearchBy.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search By", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+
         javax.swing.GroupLayout pnlManageArtifactsLayout = new javax.swing.GroupLayout(pnlManageArtifacts);
         pnlManageArtifacts.setLayout(pnlManageArtifactsLayout);
         pnlManageArtifactsLayout.setHorizontalGroup(
             pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
                 .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
-                        .addComponent(lblManageBojectsHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addComponent(lblManageArtifactsHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTabletitle, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnBackToHome1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(spTblObjects, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)))
-                .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                .addGap(715, 715, 715)
+                                .addComponent(btnBackToHome1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                        .addComponent(lblTabletitle, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(179, 179, 179))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlManageArtifactsLayout.createSequentialGroup()
+                                        .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblErrorMsgSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cmbBoxSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                                .addComponent(lblErrorMsgOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(78, 78, 78))
+                                            .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                                .addComponent(cmbBoxOrderBy, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(1, 1, 1)
+                                                .addComponent(btnSort)
+                                                .addGap(18, 18, 18)))))
+                                .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                                        .addComponent(cmbBoxSearchBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtFldSearchValue, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblErrorMsgSearchBy, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(spTblObjects, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 12, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlArtifactForm, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnlManageArtifactsLayout.setVerticalGroup(
             pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
-                .addComponent(lblManageBojectsHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblManageArtifactsHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTabletitle)
                     .addComponent(btnBackToHome1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spTblObjects, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 74, Short.MAX_VALUE))
-            .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, 700, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblErrorMsgSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblErrorMsgOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblErrorMsgSearchBy, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtFldSearchValue)
+                    .addGroup(pnlManageArtifactsLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnlManageArtifactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cmbBoxSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cmbBoxOrderBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnSort))
+                            .addComponent(cmbBoxSearchBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spTblObjects, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63))
+            .addComponent(pnlArtifactForm, javax.swing.GroupLayout.PREFERRED_SIZE, 700, Short.MAX_VALUE)
         );
 
         spTblObjects.getAccessibleContext().setAccessibleParent(spTblObjects);
+
+        pnlManageVisitors.setBackground(new java.awt.Color(1, 0, 59));
+        pnlManageVisitors.setMaximumSize(new java.awt.Dimension(1300, 700));
+        pnlManageVisitors.setMinimumSize(new java.awt.Dimension(1300, 700));
+
+        lblManageVisitorsHeader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/AllPageHeader.png"))); // NOI18N
+
+        btnBackToHome2.setBackground(new java.awt.Color(255, 255, 255));
+        btnBackToHome2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBackToHome2.setForeground(new java.awt.Color(102, 0, 153));
+        btnBackToHome2.setText("Back");
+        btnBackToHome2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackToHome2ActionPerformed(evt);
+            }
+        });
+
+        lblVisitorQueue.setFont(new java.awt.Font("Poor Richard", 1, 24)); // NOI18N
+        lblVisitorQueue.setForeground(new java.awt.Color(255, 255, 255));
+        lblVisitorQueue.setText("Visitor  Archive");
+
+        lblVisitorQueueCount.setFont(new java.awt.Font("Poor Richard", 1, 24)); // NOI18N
+        lblVisitorQueueCount.setForeground(new java.awt.Color(255, 255, 255));
+        lblVisitorQueueCount.setText("3");
+
+        lblVisitorQueueCountLabel1.setFont(new java.awt.Font("Poor Richard", 1, 24)); // NOI18N
+        lblVisitorQueueCountLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        lblVisitorQueueCountLabel1.setText("Visitors in Queue");
+
+        lblVisitorQueue1.setFont(new java.awt.Font("Poor Richard", 1, 24)); // NOI18N
+        lblVisitorQueue1.setForeground(new java.awt.Color(255, 255, 255));
+        lblVisitorQueue1.setText("Visitor  Queue");
+
+        btnNextVisitor.setBackground(new java.awt.Color(255, 255, 255));
+        btnNextVisitor.setFont(new java.awt.Font("Poor Richard", 1, 18)); // NOI18N
+        btnNextVisitor.setForeground(new java.awt.Color(0, 0, 0));
+        btnNextVisitor.setText("Next Visitor");
+        btnNextVisitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextVisitorActionPerformed(evt);
+            }
+        });
+
+        tblVisitorQueue.setBackground(new java.awt.Color(153, 153, 255));
+        tblVisitorQueue.setForeground(new java.awt.Color(0, 0, 0));
+        tblVisitorQueue.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Ticket Id", "Visitor Name", "Gender", "Visitor Type"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblVisitorQueue);
+        if (tblVisitorQueue.getColumnModel().getColumnCount() > 0) {
+            tblVisitorQueue.getColumnModel().getColumn(0).setResizable(false);
+            tblVisitorQueue.getColumnModel().getColumn(1).setResizable(false);
+            tblVisitorQueue.getColumnModel().getColumn(2).setResizable(false);
+            tblVisitorQueue.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        tblVisitorArchive.setBackground(new java.awt.Color(153, 153, 255));
+        tblVisitorArchive.setForeground(new java.awt.Color(0, 0, 0));
+        tblVisitorArchive.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Ticket Id", "Visitor Name", "Gender", "Visitor Type"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblVisitorArchive);
+        if (tblVisitorArchive.getColumnModel().getColumnCount() > 0) {
+            tblVisitorArchive.getColumnModel().getColumn(0).setResizable(false);
+            tblVisitorArchive.getColumnModel().getColumn(1).setResizable(false);
+            tblVisitorArchive.getColumnModel().getColumn(2).setResizable(false);
+            tblVisitorArchive.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        txtFldVisitorName.setBackground(new java.awt.Color(102, 153, 255));
+        txtFldVisitorName.setForeground(new java.awt.Color(255, 255, 255));
+        txtFldVisitorName.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Visitor Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        txtFldVisitorName.setCaretColor(new java.awt.Color(0, 102, 102));
+
+        cmbBoxVisitorType.setBackground(new java.awt.Color(102, 153, 255));
+        cmbBoxVisitorType.setForeground(new java.awt.Color(255, 255, 255));
+        cmbBoxVisitorType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Teacher", "Artist", "Historian", "Researcher", "Others" }));
+        cmbBoxVisitorType.setSelectedIndex(-1);
+        cmbBoxVisitorType.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Visitor Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        txtFldVisitorId.setBackground(new java.awt.Color(102, 153, 255));
+        txtFldVisitorId.setForeground(new java.awt.Color(255, 255, 255));
+        txtFldVisitorId.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Visitor Id", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+        txtFldVisitorId.setCaretColor(new java.awt.Color(0, 102, 102));
+
+        cmbBoxGender.setBackground(new java.awt.Color(102, 153, 255));
+        cmbBoxGender.setForeground(new java.awt.Color(255, 255, 255));
+        cmbBoxGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female", "Others" }));
+        cmbBoxGender.setSelectedIndex(-1);
+        cmbBoxGender.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Gender", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        btnAddVisitor.setBackground(new java.awt.Color(255, 255, 255));
+        btnAddVisitor.setFont(new java.awt.Font("Poor Richard", 1, 18)); // NOI18N
+        btnAddVisitor.setForeground(new java.awt.Color(0, 0, 0));
+        btnAddVisitor.setText("Add Visitor to Queue");
+        btnAddVisitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddVisitorActionPerformed(evt);
+            }
+        });
+
+        lblErrorMsgVisitorId.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblErrorMsgVisitorName.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblErrorMsgVisitorType.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblErrorMsgGender.setForeground(new java.awt.Color(255, 255, 255));
+
+        btnClearVisitor.setBackground(new java.awt.Color(255, 255, 255));
+        btnClearVisitor.setFont(new java.awt.Font("Poor Richard", 1, 18)); // NOI18N
+        btnClearVisitor.setForeground(new java.awt.Color(0, 0, 0));
+        btnClearVisitor.setText("Clear");
+        btnClearVisitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearVisitorActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlManageVisitorsLayout = new javax.swing.GroupLayout(pnlManageVisitors);
+        pnlManageVisitors.setLayout(pnlManageVisitorsLayout);
+        pnlManageVisitorsLayout.setHorizontalGroup(
+            pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblManageVisitorsHeader)
+            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                        .addComponent(lblVisitorQueue1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(525, 525, 525)
+                        .addComponent(lblVisitorQueue, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(249, 249, 249)
+                        .addComponent(btnBackToHome2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlManageVisitorsLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(cmbBoxVisitorType, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(51, 51, 51)
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblVisitorQueueCountLabel1)
+                                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addComponent(btnNextVisitor))
+                                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                        .addGap(77, 77, 77)
+                                        .addComponent(lblVisitorQueueCount, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(55, 55, 55)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                .addComponent(btnAddVisitor, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnClearVisitor))))
+                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblErrorMsgVisitorId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbBoxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFldVisitorId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addComponent(txtFldVisitorName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlManageVisitorsLayout.createSequentialGroup()
+                                .addGap(53, 53, 53)
+                                .addComponent(lblErrorMsgVisitorName, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                .addGap(99, 99, 99)
+                .addComponent(lblErrorMsgGender, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
+                .addComponent(lblErrorMsgVisitorType, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        pnlManageVisitorsLayout.setVerticalGroup(
+            pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                .addComponent(lblManageVisitorsHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBackToHome2)
+                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblVisitorQueue1)
+                            .addComponent(lblVisitorQueue))))
+                .addGap(18, 18, 18)
+                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlManageVisitorsLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(lblVisitorQueueCountLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblVisitorQueueCount)
+                                .addGap(80, 80, 80)
+                                .addComponent(btnNextVisitor))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(34, 34, 34)
+                        .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtFldVisitorId, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFldVisitorName, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblErrorMsgVisitorId, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblErrorMsgVisitorName, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbBoxVisitorType, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbBoxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddVisitor, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClearVisitor, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlManageVisitorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblErrorMsgVisitorType, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblErrorMsgGender, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Viom Shrestha 23048612");
@@ -791,10 +1145,10 @@ public class Musemo extends javax.swing.JFrame {
         pnlLoadingScreen.setPreferredSize(new java.awt.Dimension(1300, 700));
         pnlLoadingScreen.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblloading.setFont(new java.awt.Font("Calibri", 1, 48)); // NOI18N
-        lblloading.setForeground(new java.awt.Color(255, 255, 255));
-        lblloading.setText("Loading.......");
-        pnlLoadingScreen.add(lblloading, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 610, 350, -1));
+        lblLoading.setFont(new java.awt.Font("Calibri", 1, 48)); // NOI18N
+        lblLoading.setForeground(new java.awt.Color(255, 255, 255));
+        lblLoading.setText("Loading.......");
+        pnlLoadingScreen.add(lblLoading, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 610, 350, -1));
 
         prgBarLoadingScreen.setBackground(new java.awt.Color(255, 51, 0));
         prgBarLoadingScreen.setToolTipText("");
@@ -834,12 +1188,21 @@ public class Musemo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Button to load home screen.
+     *
+     * @param evt
+     */
     private void btnBackToHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHomeActionPerformed
         loadScreen("HomeScreen"); // Load the home screen
     }//GEN-LAST:event_btnBackToHomeActionPerformed
+
     /**
-     * Method to authenticate admin login.
-     * @param evt 
+     * Method to authenticate admin login. Validates entered username and
+     * password. Redirects to Admin dashboard on valid login. Displays error
+     * message if password or username does not match.
+     *
+     * @param evt
      */
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // Get the username and password input
@@ -859,163 +1222,15 @@ public class Musemo extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void txtFldAdminLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldAdminLoginActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldAdminLoginActionPerformed
-
+    /**
+     * Method to call loadScreen method. Button pressed action.
+     *
+     * @param evt
+     */
     private void btnManageArtifactsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageArtifactsActionPerformed
         loadScreen("ArtifactManagementScreen");
     }//GEN-LAST:event_btnManageArtifactsActionPerformed
 
-    private void pwdFldAdminLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwdFldAdminLoginActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pwdFldAdminLoginActionPerformed
-
-    private void txtFldArtifactIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldArtifactIdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldArtifactIdActionPerformed
-
-    private void btnAddArtifactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddArtifactActionPerformed
-        addArtifact();
-    }//GEN-LAST:event_btnAddArtifactActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        deleteArtifact();
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        updateArtifact();
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        clearArtifactForm();
-    }//GEN-LAST:event_btnClearActionPerformed
-    /**
-     * Validates a single input field based on specific criteria and updates its
-     * visual state.
-     *
-     * @param textField
-     * @param fieldName
-     * @param errorLbl
-     * @param errorMsg
-     * @param errorColor
-     * @param successColor
-     * @param isValidFormat
-     * @return
-     */
-    private boolean validateField(JTextField textField, String fieldName, JLabel errorLbl, String errorMsg, 
-            Color errorColor, Color successColor, boolean isValidFormat) {
-        if (ValidationUtil.isNullOrEmpty(textField.getText())) {
-            textField.setBorder(createTitledBorder(errorColor, fieldName));
-            errorLbl.setText("Field cannot be empty!");
-            errorLbl.setVisible(true);
-            return false;
-        } else if (!isValidFormat) {
-            textField.setBorder(createTitledBorder(errorColor, fieldName));
-            errorLbl.setText(errorMsg);
-            errorLbl.setVisible(true);
-            return false;
-        } else {
-            textField.setBorder(createTitledBorder(successColor, fieldName));
-            errorLbl.setVisible(false);
-            return true;
-        }
-    }
-    /**
-     * Validates a single comboBox field and updates its visual state.
-     * @param comboBox
-     * @param fieldName
-     * @param errorLbl
-     * @param errorMsg
-     * @param errorColor
-     * @param successColor
-     * @param isValidFormat
-     * @return 
-     */
-    private boolean validateComboBox(JComboBox<?> comboBox, String fieldName, JLabel errorLbl, String errorMsg,
-            Color errorColor, Color successColor, boolean isValidFormat) {
-        if (comboBox.getSelectedIndex() == -1) { // No valid selection
-            comboBox.setBorder(createTitledBorder(errorColor, fieldName));
-            errorLbl.setText(errorMsg);
-            errorLbl.setVisible(true);
-            return false;
-        } else if (!isValidFormat) {
-            comboBox.setBorder(createTitledBorder(errorColor, fieldName));
-            errorLbl.setText(errorMsg);
-            errorLbl.setVisible(true);
-            return false;
-        } else {
-            comboBox.setBorder(createTitledBorder(successColor, fieldName));
-            errorLbl.setVisible(false);
-            return true;
-        }
-    }
-
-    /**
-     * Creates a custom TitledBorder with specified color and title.
-     *
-     * @param color the color for the border and title
-     * @param title the title text for the border
-     * @return a TitledBorder instance
-     */
-    private javax.swing.border.TitledBorder createTitledBorder(Color color, String title) {
-        return javax.swing.BorderFactory.createTitledBorder(
-                javax.swing.BorderFactory.createLineBorder(color, 2),
-                title,
-                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-                javax.swing.border.TitledBorder.DEFAULT_POSITION,
-                new java.awt.Font("Segoe UI", 1, 12),
-                color
-        );
-    }
-
-    private void txtFldArtifactNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldArtifactNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldArtifactNameActionPerformed
-
-    private void txtFldCreatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldCreatorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldCreatorActionPerformed
-
-    private void txtFldStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldStatusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldStatusActionPerformed
-
-    private void txtFldOriginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldOriginActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldOriginActionPerformed
-
-    private void txtFldRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldRoomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldRoomActionPerformed
-
-    private void txtFldFloorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFldFloorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFldFloorActionPerformed
-
-    private void btnBackToHome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHome1ActionPerformed
-        loadScreen("DashboardScreen");
-    }//GEN-LAST:event_btnBackToHome1ActionPerformed
-
-    private void cmbBoxArtifactTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxArtifactTypeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbBoxArtifactTypeActionPerformed
-
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        loadScreen("AdminLoginScreen");
-    }//GEN-LAST:event_btnLogoutActionPerformed
-
-    private void btnAdminLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminLoginActionPerformed
-        loadScreen("AdminLoginScreen"); // Load the admin login screen
-    }//GEN-LAST:event_btnAdminLoginActionPerformed
-
-    private void btnBookNowPHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookNowPHActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBookNowPHActionPerformed
-
-    private void cmbBoxConditionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxConditionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbBoxConditionActionPerformed
     /**
      * Initializes the layout of the application by setting up the CardLayout
      * and adding panels for different screens. Each panel is uniquely
@@ -1031,30 +1246,203 @@ public class Musemo extends javax.swing.JFrame {
         getContentPane().add(pnlHomeScreen, "HomeScreen");
         getContentPane().add(pnlAdminDashboardScreen, "DashboardScreen");
         getContentPane().add(pnlManageArtifacts, "ArtifactManagementScreen");
+        getContentPane().add(pnlManageVisitors, "VisitorManagementScreen");
 
         // Start with the loading screen
         loadScreen("LoadingScreen");
     }
 
     /**
-     * Initializes the Artifact data and Artifact Table. Adds some Initial data
-     * into the Object List.
+     * Initializes the Artifact data and Artifact Table as well as Visitor queue
+     * data and table. Adds some Initial data into the Object List.
      */
     private void initializaData() {
+        //Making an artifact list
         artifactList = new LinkedList<>();
-        // Registering sample objects
-        enterArtifact(new ArtifactModel(110, "Mona Lisa", "Painitng", "Leonardo da Vinci", 
+
+        // Registering sample artifacts
+        enterArtifact(new ArtifactModel(110, "Mona Lisa", "Painitng", "Leonardo da Vinci",
                 "Permanent", "Italy", "Excellent", (short) 1, (short) 2));
-        enterArtifact(new ArtifactModel(140, "The Thinker", "Sculpture", "Auguste Robin", 
+        enterArtifact(new ArtifactModel(140, "The Thinker", "Sculpture", "Auguste Robin",
                 "Permanent", "France", "Good", (short) 1, (short) 5));
-        enterArtifact(new ArtifactModel(777, "Winged Victory", "Sculpture", "Unlnown", 
+        enterArtifact(new ArtifactModel(777, "Winged Victory", "Sculpture", "Unlnown",
                 "Temporary", "Greece", "Damaged", (short) 5, (short) 7));
-        enterArtifact(new ArtifactModel(401, "Rosetta Stone", "Relic", "Ancient Egyptians", 
+        enterArtifact(new ArtifactModel(401, "Rosetta Stone", "Relic", "Ancient Egyptians",
                 "Permanent", "Egypt", "Needs Restoration", (short) 02, (short) 1));
-        enterArtifact(new ArtifactModel(242, "Starry Night", "Painitng", "Vincent van Gogh", 
+        enterArtifact(new ArtifactModel(242, "Starry Night", "Painitng", "Vincent van Gogh",
                 "Temporary", "Netherlands", "Excellent", (short) 3, (short) 2));
+
+        //Making a visitor list.
+        queueList = new CustomQueue(10);
+        enterVisitor(new VisitorModel(12345, "Alfred Smith", "Male", "Student"));
+        enterVisitor(new VisitorModel(12346, "Fulkumari Devi", "Female", "Others"));
+        enterVisitor(new VisitorModel(12347, "Alexander Karki", "Male", "Artist"));
     }
-    
+
+    /**
+     * Switches the application screen to the specified screen name.
+     *
+     * @param screenName The name of the screen to display.
+     */
+    private void loadScreen(String screenName) {
+        cardLayout.show(getContentPane(), screenName);
+    }
+
+    /**
+     * Simulates the loading progress using a SwingWorker thread. Swing worker
+     * is used to perform background tasks while keeping GUI responsive through
+     * progress bar. Updates a progress bar incrementally and switches to the
+     * login screen upon completion.
+     */
+    private void startProgress() {
+        javax.swing.SwingWorker<Void, Integer> worker = new javax.swing.SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                for (int i = 0; i <= 100; i++) {
+                    Thread.sleep(10); // Simulated delay for progress bar
+                    publish(i); // Publish progress
+                }
+                return null;
+            }
+
+            @Override
+            protected void process(java.util.List<Integer> chunks) {
+                int progress = chunks.get(chunks.size() - 1);
+                prgBarLoadingScreen.setValue(progress);
+            }
+
+            @Override
+            protected void done() {
+                loadScreen("HomeScreen"); // Switch to login screen
+            }
+        };
+        worker.execute(); // Start the worker thread
+    }
+
+    /**
+     * Method to return to home page.
+     *
+     * @param evt
+     */
+    private void btnBackToHome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHome1ActionPerformed
+        loadScreen("DashboardScreen");
+    }//GEN-LAST:event_btnBackToHome1ActionPerformed
+
+    /**
+     * Method to log out of admin side.
+     *
+     * @param evt
+     */
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        loadScreen("AdminLoginScreen");
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    /**
+     * Method to go to admin login page.
+     *
+     * @param evt
+     */
+    private void btnAdminLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminLoginActionPerformed
+        loadScreen("AdminLoginScreen"); // Load the admin login screen
+    }//GEN-LAST:event_btnAdminLoginActionPerformed
+
+    private void btnManageVisitorQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageVisitorQueueActionPerformed
+        loadScreen("VisitorManagementScreen");
+    }//GEN-LAST:event_btnManageVisitorQueueActionPerformed
+
+    private void btnBackToHome2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToHome2ActionPerformed
+        loadScreen("DashboardScreen");
+    }//GEN-LAST:event_btnBackToHome2ActionPerformed
+
+    /**
+     * Method to call updateArtifact method. Button pressed action.
+     *
+     * @param evt
+     */
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        updateArtifact();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    /**
+     * Method to call addArtifact method. Button pressed action.
+     *
+     * @param evt
+     */
+    private void btnAddArtifactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddArtifactActionPerformed
+        addArtifact();
+    }//GEN-LAST:event_btnAddArtifactActionPerformed
+
+    /**
+     * Method to call deleteArtifact method. Button pressed action.
+     *
+     * @param evt
+     */
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        deleteArtifact();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    /**
+     * Method to call clearArtifactForm method. Button pressed action.
+     *
+     * @param evt
+     */
+    private void btnClearArtifactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearArtifactActionPerformed
+        clearArtifactForm();
+    }//GEN-LAST:event_btnClearArtifactActionPerformed
+
+    /**
+     * Method to call handleNextVisitor() method.
+     *
+     * @param evt
+     */
+    private void btnNextVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextVisitorActionPerformed
+        handleNextVisitor();
+    }//GEN-LAST:event_btnNextVisitorActionPerformed
+
+    /**
+     * Method to call addVisitor method.
+     *
+     * @param evt
+     */
+    private void btnAddVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVisitorActionPerformed
+        addVisitor();
+    }//GEN-LAST:event_btnAddVisitorActionPerformed
+
+    /**
+     * Method to call clearVisitorForm().
+     *
+     * @param evt
+     */
+    private void btnClearVisitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearVisitorActionPerformed
+        clearVisitorForm();
+    }//GEN-LAST:event_btnClearVisitorActionPerformed
+
+    /**
+     * Method to call sortArtifact().
+     *
+     * @param evt
+     */
+    private void btnSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortActionPerformed
+        sortArtifact();
+    }//GEN-LAST:event_btnSortActionPerformed
+
+    /**
+     * Method to call searchArtifact().
+     *
+     * @param evt
+     */
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        searchArtifact();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void cmbBoxSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxSortByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbBoxSortByActionPerformed
+
+    private void cmbBoxOrderByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxOrderByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbBoxOrderByActionPerformed
+
     /**
      * Method to add Artifact data to table from List.
      *
@@ -1065,15 +1453,32 @@ public class Musemo extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) tblArtifact.getModel();
         model.addRow(new Object[]{
-            artifact.getArtifactID(), artifact.getArtifactName(), artifact.getArtifactType(),
+            artifact.getArtifactId(), artifact.getArtifactName(), artifact.getArtifactType(),
             artifact.getCreator(), artifact.getStatus(), artifact.getOrigin(),
             artifact.getCondition(), artifact.getFloor(), artifact.getRoomNo()
         });
     }
-    
+
+    /**
+     * Method to add Visitor data to table from List.
+     *
+     * @param object
+     */
+    private void enterVisitor(VisitorModel visitor) {
+        queueList.enQueue(visitor);
+
+        DefaultTableModel model = (DefaultTableModel) tblVisitorQueue.getModel();
+        model.addRow(new Object[]{
+            visitor.getVisitorId(), visitor.getVisitorName(), visitor.getGender(),
+            visitor.getVisitorType()
+        });
+    }
+
     /**
      * Method to addArtifact to artifact list.
-     * Calls other methods to clear form, load list to table, set the color of text field border and display error message
+     *
+     * Calls other methods to clear form, load list to table, set the color of
+     * text field border and display error message
      */
     private void addArtifact() {
         boolean isValid = validateFields();
@@ -1094,24 +1499,92 @@ public class Musemo extends javax.swing.JFrame {
 
             // Check for duplicate Artifact ID
             if (checkDuplicateArtifact(newArtifact)) {
-                txtFldArtifactId.setBorder(createTitledBorder(errorColor, "Object ID"));
+                txtFldArtifactId.setBorder(createTitledBorder(errorColor, "Artifact ID"));
                 showDialogBox("Artifact with this ID already exists.", "Duplicate Entry!",
-                       JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.WARNING_MESSAGE);
             } else {
                 // Add the Artifact if no duplicate is found
                 artifactList.add(newArtifact);
                 clearArtifactForm();
-                loadListToTable(artifactList);
-                txtFldArtifactId.setBorder(createTitledBorder(greenColor, "Object ID"));
+                loadListToArtifactTable(artifactList);
+                txtFldArtifactId.setBorder(createTitledBorder(greenColor, "Artifact ID"));
                 showDialogBox("Artifact added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
 
-    
     /**
-     * Method to update artifact table.
-     * Validates entered data. Shows error message if entered id does not exist.
+     * Method to add visitor to queue list.
+     *
+     * Calls other methods to clear form, load list to table, set the color of
+     * text field border and display error message
+     */
+    private void addVisitor() {
+        boolean isValid = true;
+        boolean isFull = queueList.isFull();
+        // Validate Visitor ID
+        try {
+            isValid &= validateField(txtFldVisitorId, "Visitor Id", lblErrorMsgVisitorId, "Must be 5-digit number.",
+                    errorColor, greenColor, ValidationUtil.isValidVisitorId(Integer.parseInt(txtFldVisitorId.getText()))
+            );
+        } catch (NumberFormatException e) {
+            isValid &= validateField(txtFldVisitorId, "Visitor Id", lblErrorMsgVisitorId, "Field cannot be empty",
+                    errorColor, greenColor, false
+            );
+        }
+
+        // Validate Visitor Name
+        isValid &= validateField(txtFldVisitorName, "Visitor Name", lblErrorMsgVisitorName, "Must contain only alphabets.",
+                errorColor, greenColor, ValidationUtil.isValidName(txtFldVisitorName.getText())
+        );
+
+        // Validate Visitor Type
+        isValid &= validateComboBox(
+                cmbBoxVisitorType, "Visitor Type", lblErrorMsgVisitorType, "Must Select Something.",
+                errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxVisitorType.getSelectedIndex())
+        );
+
+        // Validate Visitor Gender
+        isValid &= validateComboBox(
+                cmbBoxGender, "Gender", lblErrorMsgGender, "Must Select Something.",
+                errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxGender.getSelectedIndex())
+        );
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to add visitor to queue with this id? This can not be removed or changed",
+                "Confirm queue",
+                JOptionPane.YES_NO_OPTION);
+
+        if (isValid && !isFull && confirm == JOptionPane.YES_OPTION) {
+            // Create a VisitorModel instance
+            VisitorModel newVisitor = new VisitorModel(
+                    Integer.parseInt(txtFldVisitorId.getText().trim()),
+                    txtFldVisitorName.getText().trim(),
+                    cmbBoxVisitorType.getSelectedItem().toString().trim(),
+                    cmbBoxGender.getSelectedItem().toString().trim()
+            );
+
+            // Check for duplicate Visitor ID
+            if (checkDuplicateVisitor(newVisitor)) {
+                txtFldVisitorId.setBorder(createTitledBorder(errorColor, "Visitor ID"));
+                showDialogBox("Visitor with this ID already exists.", "Duplicate Entry!",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                // Add the Visitor if no duplicate is found
+                queueList.enQueue(newVisitor);
+
+                clearVisitorForm();
+                loadListToVisitorQueueTable(queueList);
+                txtFldVisitorId.setBorder(createTitledBorder(greenColor, "Visitor ID"));
+                showDialogBox("Visitor added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                lblVisitorQueueCount.setText(String.valueOf(queueList.poll()));
+            }
+        }
+    }
+
+    /**
+     * Method to update artifact table. Validates entered data. Shows error
+     * message if entered id does not exist.
      */
     private void updateArtifact() {
         boolean isValid = validateFields();
@@ -1121,7 +1594,7 @@ public class Musemo extends javax.swing.JFrame {
             int artifactId = Integer.parseInt(txtFldArtifactId.getText());
             boolean found = false;
             for (ArtifactModel artifact : artifactList) { // artifactList is a List<Artifact>
-                if (artifact.getArtifactID() == artifactId) {
+                if (artifact.getArtifactId() == artifactId) {
                     artifact.setArtifactName(txtFldArtifactName.getText());
                     artifact.setArtifactType(cmbBoxArtifactType.getSelectedItem().toString());
                     artifact.setCreator(txtFldCreator.getText());
@@ -1130,13 +1603,13 @@ public class Musemo extends javax.swing.JFrame {
                     artifact.setStatus(txtFldStatus.getText());
                     artifact.setFloor(Short.parseShort(txtFldFloor.getText()));
                     artifact.setRoomNo(Short.parseShort(txtFldRoom.getText()));
-                    loadListToTable(artifactList);
+                    loadListToArtifactTable(artifactList);
                     found = true;
                     break;
-                } 
+                }
             }
-            if(!found){
-                    showDialogBox("Artifact not found or update failed.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!found) {
+                showDialogBox("Artifact not found or update failed.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -1152,7 +1625,7 @@ public class Musemo extends javax.swing.JFrame {
                     errorColor, greenColor, ValidationUtil.isValidArtifactId(Integer.parseInt(txtFldArtifactId.getText()))
             );
         } catch (NumberFormatException e) {
-            isValid &= validateField(txtFldArtifactId, "Artifact ID", lblErrorMsgArtifactId, 
+            isValid &= validateField(txtFldArtifactId, "Artifact ID", lblErrorMsgArtifactId,
                     "Enter the Id of the Artifact to be deleted!", errorColor, greenColor, false
             );
         }
@@ -1187,9 +1660,9 @@ public class Musemo extends javax.swing.JFrame {
      */
     private boolean deleteFromList(int artifactId) {
         for (ArtifactModel artifact : artifactList) { // artifactList is a List<Artifact>
-            if (artifact.getArtifactID() == artifactId) {
+            if (artifact.getArtifactId() == artifactId) {
                 artifactList.remove(artifact);
-                loadListToTable(artifactList);
+                loadListToArtifactTable(artifactList);
                 return true; // Successfully deleted
             }
         }
@@ -1197,49 +1670,12 @@ public class Musemo extends javax.swing.JFrame {
     }
 
     /**
-     * Switches the application screen to the specified screen name.
-     *
-     * @param screenName The name of the screen to display.
-     */
-    private void loadScreen(String screenName) {
-        cardLayout.show(getContentPane(), screenName);
-    }
-
-    /**
-     * Simulates the loading progress using a SwingWorker thread. Updates a
-     * progress bar incrementally and switches to the login screen upon
-     * completion.
-     */
-    private void startProgress() {
-        javax.swing.SwingWorker<Void, Integer> worker = new javax.swing.SwingWorker<>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                for (int i = 0; i <= 100; i++) {
-                    Thread.sleep(10); // Simulated delay for progress bar
-                    publish(i); // Publish progress
-                }
-                return null;
-            }
-
-            @Override
-            protected void process(java.util.List<Integer> chunks) {
-                int progress = chunks.get(chunks.size() - 1);
-                prgBarLoadingScreen.setValue(progress);
-            }
-
-            @Override
-            protected void done() {
-                loadScreen("HomeScreen"); // Switch to login screen
-            }
-        };
-        worker.execute(); // Start the worker thread
-    }
-
-    /**
      * Populates the JTable with the current list of Artifact records. And
      * clears the table contents before adding
+     *
+     * @param artifactList
      */
-    private void loadListToTable(List<ArtifactModel> artifactList) {
+    private void loadListToArtifactTable(List<ArtifactModel> artifactList) {
         DefaultTableModel model = (DefaultTableModel) tblArtifact.getModel();
 
         // Clear existing rows if needed
@@ -1247,7 +1683,7 @@ public class Musemo extends javax.swing.JFrame {
 
         // Populate the table with object data
         artifactList.forEach(object -> model.addRow(new Object[]{
-            object.getArtifactID(),
+            object.getArtifactId(),
             object.getArtifactName(),
             object.getArtifactType(),
             object.getCreator(),
@@ -1256,6 +1692,27 @@ public class Musemo extends javax.swing.JFrame {
             object.getCondition(),
             object.getFloor(),
             object.getRoomNo(),}));
+    }
+
+    /**
+     * Populates the JTable with the current list of Visitor queue records in
+     * the queue. Clears the table contents before adding.
+     *
+     * @param visitorQueue CustomQueue containing VisitorModel records
+     */
+    private void loadListToVisitorQueueTable(CustomQueue visitorQueue) {
+        DefaultTableModel model = (DefaultTableModel) tblVisitorQueue.getModel();
+
+        // Clear existing rows
+        model.setRowCount(0);
+
+        // Populate the table with visitor data
+        visitorQueue.getQueueList().forEach(visitor -> model.addRow(new Object[]{
+            visitor.getVisitorId(),
+            visitor.getVisitorName(),
+            visitor.getGender(),
+            visitor.getVisitorType()
+        }));
     }
 
     /**
@@ -1270,19 +1727,32 @@ public class Musemo extends javax.swing.JFrame {
     }
 
     /**
-     * Method to check if duplicate object is entered.
+     * Method to check if duplicate artifact is entered.
      *
-     * @param object ObjectModel object to check for duplicates
+     * @param artifact ArtifactModel object to check for duplicates
      * @return true id duplicate is found
      */
     private boolean checkDuplicateArtifact(ArtifactModel artifact) {
         return artifactList.stream()
                 .anyMatch(existingObject
-                        -> existingObject.getArtifactID() == artifact.getArtifactID());
+                        -> existingObject.getArtifactId() == artifact.getArtifactId());
     }
 
     /**
-     * Method to clear all the entered data from the text fields all at once
+     * Method to check if a duplicate visitor ID exists in the queue.
+     *
+     * @param visitor VisitorModel object to check for duplicates
+     * @return true if a duplicate is found
+     */
+    private boolean checkDuplicateVisitor(VisitorModel visitor) {
+        return queueList.getQueueList().stream()
+                .anyMatch(existingVisitor
+                        -> existingVisitor.getVisitorId() == visitor.getVisitorId());
+    }
+
+    /**
+     * Method to clear all the entered data from the artifact text fields all at
+     * once
      */
     private void clearArtifactForm() {
         txtFldArtifactId.setText("");
@@ -1295,9 +1765,154 @@ public class Musemo extends javax.swing.JFrame {
         txtFldFloor.setText("");
         txtFldRoom.setText("");
     }
-    /** 
-     * Method to validate fields
-     * @return 
+
+    /**
+     * Method to clear all the entered data from the visitor text fields all at
+     * once
+     */
+    private void clearVisitorForm() {
+        txtFldVisitorId.setText("");
+        txtFldVisitorName.setText("");
+        cmbBoxVisitorType.setSelectedIndex(-1);
+        cmbBoxGender.setSelectedIndex(-1);
+    }
+
+    /**
+     * Method to sort Artifact table data using different algorithms in selected
+     * field. Updates the table data to sorted data.
+     */
+    private void sortArtifact() {
+        boolean isValid = true;
+
+        // Validate Sort by combo box
+        isValid &= validateComboBox(
+                cmbBoxSortBy, "Sort By", lblErrorMsgSortBy, "Must select sorting Field",
+                errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxSortBy.getSelectedIndex())
+        );
+
+        // Validate order by combo box
+        isValid &= validateComboBox(
+                cmbBoxOrderBy, "Order By", lblErrorMsgOrderBy, "Must select sorting Order",
+                errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxOrderBy.getSelectedIndex())
+        );
+
+        if (isValid) {
+            //Getting sort by and order by inputs
+            String sortBy = cmbBoxSortBy.getSelectedItem().toString();
+            String orderBy = cmbBoxOrderBy.getSelectedItem().toString();
+
+            if (sortBy.equals("Artifact Id")) {
+                if (orderBy.equals("Ascending")) {
+                    List<ArtifactModel> sortedList = selectionSort.sortByArtifactId(artifactList, false);
+                    loadListToArtifactTable(sortedList);
+                } else {
+                    List<ArtifactModel> sortedList = selectionSort.sortByArtifactId(artifactList, true);
+                    loadListToArtifactTable(sortedList);
+                }
+            } else if (sortBy.equals("Artifact Name")) {
+                if (orderBy.equals("Ascending")) {
+                    List<ArtifactModel> sortedList = insertionSort.sortByArtifactName(artifactList, false);
+                    loadListToArtifactTable(sortedList);
+                } else {
+                    List<ArtifactModel> sortedList = insertionSort.sortByArtifactName(artifactList, true);
+                    loadListToArtifactTable(sortedList);
+                }
+            } else {
+                if (orderBy.equals("Ascending")) {
+                    List<ArtifactModel> sortedList = mergeSort.sortByFloor(artifactList, false);
+                    loadListToArtifactTable(sortedList);
+                } else {
+                    List<ArtifactModel> sortedList = mergeSort.sortByFloor(artifactList, true);
+                    loadListToArtifactTable(sortedList);
+                }
+            }
+        }
+    }
+
+    /**
+     * Method to search from Artifact table data using different algorithms in
+     * selected field. Updates the table data to sorted data.
+     */
+    private void searchArtifact() {
+        List<ArtifactModel> matchingArtifacts = new LinkedList();
+        boolean isValid = true;
+
+        // Validate Search by combo box
+        isValid &= validateComboBox(
+                cmbBoxSearchBy, "Search By", lblErrorMsgSearchBy, "Must select sorting Field",
+                errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxSearchBy.getSelectedIndex())
+        );
+
+        if (isValid) {
+            //Getting search by and search by inputs
+            String searchBy = cmbBoxSearchBy.getSelectedItem().toString();
+            String searchValue = txtFldSearchValue.getText();
+
+            switch (searchBy) {
+                case "Artifact Id": {
+                    try {
+                        matchingArtifacts.clear();
+                        List<ArtifactModel> sortedList = selectionSort.sortByArtifactId(artifactList, false);
+                        matchingArtifacts = binarySearch.searchByArtifactId(sortedList, Integer.parseInt(searchValue));
+
+                        if (!matchingArtifacts.isEmpty()) {
+                            loadListToArtifactTable(matchingArtifacts);
+                        } else {
+                            showDialogBox("No artifacts found for the specified Artifact ID.", "Search Result", JOptionPane.WARNING_MESSAGE);
+                        }
+                    } catch (NumberFormatException e) {
+                        showDialogBox("Please enter a valid Artifact ID.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        loadListToArtifactTable(artifactList);
+                    }
+                    break;
+                }
+
+                case "Artifact Name": {
+                    matchingArtifacts.clear();
+                    if (searchValue == null || searchValue.trim().isEmpty()) {
+                        showDialogBox("Please enter a valid Artifact Name.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    List<ArtifactModel> sortedList = insertionSort.sortByArtifactName(artifactList, false);
+                    matchingArtifacts = binarySearch.searchByArtifactName(sortedList, searchValue);
+
+                    if (!matchingArtifacts.isEmpty()) {
+                        loadListToArtifactTable(matchingArtifacts);
+                    } else {
+                        showDialogBox("No artifacts found for the specified Artifact Name.", "Search Result", JOptionPane.WARNING_MESSAGE);
+                    }
+                    break;
+                }
+
+                case "Floor": {
+                    matchingArtifacts.clear();
+                    List<ArtifactModel> sortedList = mergeSort.sortByFloor(artifactList, false);
+                    try {
+                        matchingArtifacts = binarySearch.searchByFloor(sortedList, Integer.parseInt(searchValue));
+
+                        if (!matchingArtifacts.isEmpty()) {
+                            loadListToArtifactTable(matchingArtifacts);
+                        } else {
+                            showDialogBox("No artifacts found for the specified floor.", "Search Result", JOptionPane.WARNING_MESSAGE);
+                        }
+                    } catch (NumberFormatException e) {
+                        showDialogBox("Please enter a valid floor number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        loadListToArtifactTable(artifactList);
+                    }
+                    break;
+                }
+
+                default:
+                    showDialogBox("Invalid search criteria selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Method to validate fields.
+     *
+     * @return isValid
      */
     private boolean validateFields() {
         boolean isValid = true;
@@ -1375,6 +1990,118 @@ public class Musemo extends javax.swing.JFrame {
     }
 
     /**
+     * Validates a single input field based on specific criteria and updates its
+     * visual state.
+     *
+     * @param textField selected text field
+     * @param fieldName
+     * @param errorLbl
+     * @param errorMsg
+     * @param errorColor
+     * @param successColor
+     * @param isValidFormat
+     * @return
+     */
+    private boolean validateField(JTextField textField, String fieldName, JLabel errorLbl, String errorMsg,
+            Color errorColor, Color successColor, boolean isValidFormat) {
+        if (ValidationUtil.isNullOrEmpty(textField.getText())) {
+            textField.setBorder(createTitledBorder(errorColor, fieldName));
+            errorLbl.setText("Field cannot be empty!");
+            errorLbl.setVisible(true);
+            return false;
+        } else if (!isValidFormat) {
+            textField.setBorder(createTitledBorder(errorColor, fieldName));
+            errorLbl.setText(errorMsg);
+            errorLbl.setVisible(true);
+            return false;
+        } else {
+            textField.setBorder(createTitledBorder(successColor, fieldName));
+            errorLbl.setVisible(false);
+            return true;
+        }
+    }
+
+    /**
+     * Validates a single comboBox field and updates its visual state.
+     *
+     * @param comboBox the selected ComboBox field
+     * @param fieldName
+     * @param errorLbl
+     * @param errorMsg
+     * @param errorColor
+     * @param successColor
+     * @param isValidFormat
+     * @return
+     */
+    private boolean validateComboBox(JComboBox<?> comboBox, String fieldName, JLabel errorLbl, String errorMsg,
+            Color errorColor, Color successColor, boolean isValidFormat) {
+        if (comboBox.getSelectedIndex() == -1) { // No valid selection
+            comboBox.setBorder(createTitledBorder(errorColor, fieldName));
+            errorLbl.setText(errorMsg);
+            errorLbl.setVisible(true);
+            return false;
+        } else if (!isValidFormat) {
+            comboBox.setBorder(createTitledBorder(errorColor, fieldName));
+            errorLbl.setText(errorMsg);
+            errorLbl.setVisible(true);
+            return false;
+        } else {
+            comboBox.setBorder(createTitledBorder(successColor, fieldName));
+            errorLbl.setVisible(false);
+            return true;
+        }
+    }
+
+    /**
+     * Creates a custom TitledBorder with specified color and title.
+     *
+     * @param color the color for the border and title
+     * @param title the title text for the border
+     * @return a TitledBorder instance
+     */
+    private javax.swing.border.TitledBorder createTitledBorder(Color color, String title) {
+        return javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createLineBorder(color, 2),
+                title,
+                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                new java.awt.Font("Segoe UI", 1, 12),
+                color
+        );
+    }
+
+    /**
+     * Method to De-queue the first visitor from queue list and queue table and
+     * add it to visitor archive table. Loads new queue to Visitor queue table
+     * with success message. Displays current visitors in Queue using JLabel.
+     * Displays error message if the queue is empty.
+     */
+    private void handleNextVisitor() {
+        try {
+            // Dequeue the next visitor from the queue
+            VisitorModel nextVisitor = queueList.deQueue();
+
+            // Add the dequeued visitor to the archive table
+            DefaultTableModel archiveModel = (DefaultTableModel) tblVisitorArchive.getModel();
+            archiveModel.addRow(new Object[]{
+                nextVisitor.getVisitorId(),
+                nextVisitor.getVisitorName(),
+                nextVisitor.getGender(),
+                nextVisitor.getVisitorType()
+            });
+
+            // Refresh the queue table to reflect the removed visitor
+            loadListToVisitorQueueTable(queueList);
+            JOptionPane.showMessageDialog(this, "Visitor processed successfully.", "Next Visitor", JOptionPane.INFORMATION_MESSAGE);
+            lblVisitorQueueCount.setText(String.valueOf(queueList.poll()));
+
+        } catch (IllegalStateException ex) {
+            // Handle the case where the queue is empty
+            JOptionPane.showMessageDialog(this, "No visitors left in the queue.", "Queue Empty", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -1411,18 +2138,31 @@ public class Musemo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddArtifact;
+    private javax.swing.JButton btnAddVisitor;
     private javax.swing.JButton btnAdminLogin;
     private javax.swing.JButton btnBackToHome;
     private javax.swing.JButton btnBackToHome1;
-    private javax.swing.JButton btnBookNowPH;
-    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnBackToHome2;
+    private javax.swing.JButton btnClearArtifact;
+    private javax.swing.JButton btnClearVisitor;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageArtifacts;
+    private javax.swing.JButton btnManageVisitorQueue;
+    private javax.swing.JButton btnNextVisitor;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSort;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cmbBoxArtifactType;
     private javax.swing.JComboBox<String> cmbBoxCondition;
+    private javax.swing.JComboBox<String> cmbBoxGender;
+    private javax.swing.JComboBox<String> cmbBoxOrderBy;
+    private javax.swing.JComboBox<String> cmbBoxSearchBy;
+    private javax.swing.JComboBox<String> cmbBoxSortBy;
+    private javax.swing.JComboBox<String> cmbBoxVisitorType;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblAboutUsSlogan;
     private javax.swing.JLabel lblAboutUsTitle;
@@ -1435,36 +2175,51 @@ public class Musemo extends javax.swing.JFrame {
     private javax.swing.JLabel lblErrorMsgCondition;
     private javax.swing.JLabel lblErrorMsgCreator;
     private javax.swing.JLabel lblErrorMsgFloor;
+    private javax.swing.JLabel lblErrorMsgGender;
+    private javax.swing.JLabel lblErrorMsgOrderBy;
     private javax.swing.JLabel lblErrorMsgOrigin;
     private javax.swing.JLabel lblErrorMsgRoomNo;
+    private javax.swing.JLabel lblErrorMsgSearchBy;
+    private javax.swing.JLabel lblErrorMsgSortBy;
     private javax.swing.JLabel lblErrorMsgStatus;
+    private javax.swing.JLabel lblErrorMsgVisitorId;
+    private javax.swing.JLabel lblErrorMsgVisitorName;
+    private javax.swing.JLabel lblErrorMsgVisitorType;
     private javax.swing.JLabel lblFounderHeader;
     private javax.swing.JLabel lblFounderMessage;
     private javax.swing.JLabel lblHomePageHeader;
     private javax.swing.JLabel lblHomePageHeader1;
     private javax.swing.JLabel lblHomePageWelcome1;
+    private javax.swing.JLabel lblLoading;
     private javax.swing.JLabel lblLoadingScreenGif;
     private javax.swing.JLabel lblLoadingTitle;
     private javax.swing.JLabel lblLoginError;
     private javax.swing.JLabel lblLoginIcon;
     private javax.swing.JLabel lblLoginMessage;
     private javax.swing.JLabel lblLoginMessage1;
-    private javax.swing.JLabel lblManageBojectsHeader;
+    private javax.swing.JLabel lblManageArtifactsHeader;
+    private javax.swing.JLabel lblManageVisitorsHeader;
     private javax.swing.JLabel lblTabletitle;
-    private javax.swing.JLabel lblloading;
+    private javax.swing.JLabel lblVisitorQueue;
+    private javax.swing.JLabel lblVisitorQueue1;
+    private javax.swing.JLabel lblVisitorQueueCount;
+    private javax.swing.JLabel lblVisitorQueueCountLabel1;
     private javax.swing.JPanel pnlAboutPage;
     private javax.swing.JPanel pnlAdminDashboardScreen;
     private javax.swing.JPanel pnlAdminLoginScreen;
-    private javax.swing.JPanel pnlForm;
+    private javax.swing.JPanel pnlArtifactForm;
     private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlHomeScreen;
     private javax.swing.JPanel pnlLoadingScreen;
     private javax.swing.JPanel pnlManageArtifacts;
+    private javax.swing.JPanel pnlManageVisitors;
     private javax.swing.JProgressBar prgBarLoadingScreen;
     private javax.swing.JPasswordField pwdFldAdminLogin;
     private javax.swing.JScrollPane scrlPaneHome;
     private javax.swing.JScrollPane spTblObjects;
     private javax.swing.JTable tblArtifact;
+    private javax.swing.JTable tblVisitorArchive;
+    private javax.swing.JTable tblVisitorQueue;
     private javax.swing.JTextField txtFldAdminLogin;
     private javax.swing.JTextField txtFldArtifactId;
     private javax.swing.JTextField txtFldArtifactName;
@@ -1472,6 +2227,9 @@ public class Musemo extends javax.swing.JFrame {
     private javax.swing.JTextField txtFldFloor;
     private javax.swing.JTextField txtFldOrigin;
     private javax.swing.JTextField txtFldRoom;
+    private javax.swing.JTextField txtFldSearchValue;
     private javax.swing.JTextField txtFldStatus;
+    private javax.swing.JTextField txtFldVisitorId;
+    private javax.swing.JTextField txtFldVisitorName;
     // End of variables declaration//GEN-END:variables
 }
