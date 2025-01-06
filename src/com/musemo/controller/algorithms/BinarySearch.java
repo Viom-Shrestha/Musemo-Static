@@ -2,7 +2,7 @@ package com.musemo.controller.algorithms;
 
 import com.musemo.model.ArtifactModel;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;  
 
 /**
  * Binary Search implementation for finding an ArtifactModel object. Searches by
@@ -27,7 +27,7 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2; // Prevents overflow for large indices
+            int mid = left + (right - left) / 2;
             int midFloor = sortedList.get(mid).getFloor();
 
             if (midFloor == targetFloor) {
@@ -72,24 +72,12 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2; // Prevents overflow for large indices
+            int mid = left + (right - left) / 2; 
             int midId = sortedList.get(mid).getArtifactId();
 
             if (midId == targetArtifactId) {
                 // Add the matching artifact to the result list
                 matchingArtifacts.add(sortedList.get(mid));
-
-                // Check for duplicates on both sides of the mid
-                int i = mid - 1;
-                while (i >= 0 && sortedList.get(i).getArtifactId() == targetArtifactId) {
-                    matchingArtifacts.add(sortedList.get(i));
-                    i--;
-                }
-                int j = mid + 1;
-                while (j < sortedList.size() && sortedList.get(j).getArtifactId() == targetArtifactId) {
-                    matchingArtifacts.add(sortedList.get(j));
-                    j++;
-                }
                 break;
             } else {
                 if (midId < targetArtifactId) {
@@ -117,8 +105,8 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2; // Prevents overflow for large indices
-            String midName = sortedList.get(mid).getArtifactName();
+            int mid = left + (right - left) / 2; 
+            String midName = sortedList.get(mid).getArtifactName().trim();
             int compareName = midName.compareToIgnoreCase(targetArtifactName);
             if (compareName == 0) {
                 // Add the matching artifact to the result list
@@ -126,12 +114,12 @@ public class BinarySearch {
 
                 // Check for duplicates on both sides of the mid
                 int i = mid - 1;
-                while (i >= 0 && sortedList.get(i).getArtifactName().compareToIgnoreCase(targetArtifactName) == 0) {
+                while (i >= 0 && sortedList.get(i).getArtifactName().trim().compareToIgnoreCase(targetArtifactName) == 0) {
                     matchingArtifacts.add(sortedList.get(i));
                     i--;
                 }
                 int j = mid + 1;
-                while (j < sortedList.size() && sortedList.get(j).getArtifactName().compareToIgnoreCase(targetArtifactName) == 0) {
+                while (j < sortedList.size() && sortedList.get(j).getArtifactName().trim().compareToIgnoreCase(targetArtifactName) == 0) {
                     matchingArtifacts.add(sortedList.get(j));
                     j++;
                 }

@@ -15,7 +15,7 @@ public class ValidationUtil {
     private static final Pattern ARTIFACT_ID_PATTERN = Pattern.compile("^\\d{3}$");
     private static final Pattern VISITOR_ID_PATTERN = Pattern.compile("^\\d{5}$");
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z\\s]+$");
-    private static final Pattern STATUS_PATTERN = Pattern.compile("^(Permanent|Temporary|permanent|temporary)$");
+    private static final Pattern STATUS_PATTERN = Pattern.compile("^(Permanent|Temporary|permanent|temporary|PERMANENT|TEMPORARY)$");
 
     /**
      * Validates if a string text field is null or empty.
