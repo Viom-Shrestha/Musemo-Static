@@ -23,22 +23,25 @@ public class ArtifactModel {
      * Default empty constructor for the class.
      */
     public ArtifactModel() {
+
     }
 
     /**
      * Class constructor used to create an artifact object with attributes.
      *
-     * @param artifactId
-     * @param artifactName
-     * @param artifactType
-     * @param creator
-     * @param status
-     * @param origin
-     * @param condition
-     * @param floor
-     * @param roomNo
+     * @param artifactId id of the artifact
+     * @param artifactName name of the artifact
+     * @param artifactType type of artifact like painting, sculpture,relic,
+     * fossil,others
+     * @param creator name of the creator of artifact
+     * @param status artifact status like permanent or temporary
+     * @param origin place from where artifact originates
+     * @param condition artifacts condition
+     * @param floor floor where artifact is placed(1-5)
+     * @param roomNo room where artifact is placed (1-7)
      */
-    public ArtifactModel(int artifactId, String artifactName, String artifactType, String creator, String status, String origin, String condition, short floor, short roomNo) {
+    public ArtifactModel(int artifactId, String artifactName, String artifactType, 
+            String creator, String status, String origin, String condition, short floor, short roomNo) {
         this.artifactId = artifactId;
         this.artifactName = artifactName;
         this.artifactType = artifactType;

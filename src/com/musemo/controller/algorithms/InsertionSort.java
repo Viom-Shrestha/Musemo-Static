@@ -13,6 +13,10 @@ public class InsertionSort {
 
     List<ArtifactModel> artifactSortList;
 
+    /**
+     * Default constructor for the class to initialize a new artifact list for
+     * storing sorted list data.
+     */
     public InsertionSort() {
         artifactSortList = new ArrayList<>();
     }

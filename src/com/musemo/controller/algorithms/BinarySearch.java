@@ -2,7 +2,7 @@ package com.musemo.controller.algorithms;
 
 import com.musemo.model.ArtifactModel;
 import java.util.ArrayList;
-import java.util.List;  
+import java.util.List;
 
 /**
  * Binary Search implementation for finding an ArtifactModel object. Searches by
@@ -31,7 +31,6 @@ public class BinarySearch {
             int midFloor = sortedList.get(mid).getFloor();
 
             if (midFloor == targetFloor) {
-                // Add the matching artifact to the result list
                 matchingArtifacts.add(sortedList.get(mid));
 
                 // Check for duplicates on both sides of the mid
@@ -54,7 +53,7 @@ public class BinarySearch {
                 }
             }
         }
-        return matchingArtifacts; // Target floor not found
+        return matchingArtifacts;
     }
 
     /**
@@ -67,17 +66,16 @@ public class BinarySearch {
      * not found
      */
     public List<ArtifactModel> searchByArtifactId(List<ArtifactModel> sortedList, int targetArtifactId) {
-        List<ArtifactModel> matchingArtifacts = new ArrayList<>();
+        List<ArtifactModel> matchingArtifact = new ArrayList<>();
         int left = 0;
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2; 
+            int mid = left + (right - left) / 2;
             int midId = sortedList.get(mid).getArtifactId();
 
             if (midId == targetArtifactId) {
-                // Add the matching artifact to the result list
-                matchingArtifacts.add(sortedList.get(mid));
+                matchingArtifact.add(sortedList.get(mid));
                 break;
             } else {
                 if (midId < targetArtifactId) {
@@ -87,7 +85,7 @@ public class BinarySearch {
                 }
             }
         }
-        return matchingArtifacts; // Target artifact id not found
+        return matchingArtifact;
     }
 
     /**
@@ -105,11 +103,10 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2; 
+            int mid = left + (right - left) / 2;
             String midName = sortedList.get(mid).getArtifactName().trim();
             int compareName = midName.compareToIgnoreCase(targetArtifactName);
             if (compareName == 0) {
-                // Add the matching artifact to the result list
                 matchingArtifacts.add(sortedList.get(mid));
 
                 // Check for duplicates on both sides of the mid

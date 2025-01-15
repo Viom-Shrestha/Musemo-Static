@@ -13,6 +13,10 @@ public class MergeSort {
 
     List<ArtifactModel> artifactSortList;
 
+    /**
+     * Default class constructor for initializing a new ArrayList for storing
+     * sorted artifact list.
+     */
     public MergeSort() {
         artifactSortList = new ArrayList<>();
     }
@@ -64,10 +68,10 @@ public class MergeSort {
     }
 
     /**
-     * Merges two sorted sublists into a single sorted list.
+     * Merges two sorted sub-lists into a single sorted list.
      *
-     * @param first the first sublist
-     * @param second the second sublist
+     * @param first the first sub-list
+     * @param second the second sub-list
      * @param result the list to store merged result
      * @param isDesc specifies the sort order
      */

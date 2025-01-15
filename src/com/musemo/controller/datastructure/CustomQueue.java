@@ -40,13 +40,12 @@ public class CustomQueue {
         try {
             return queueList.removeFirst();
         } catch (Exception ex) {
-            throw new IllegalStateException("Cannot remove from empty queue."); // Indicates the queue is empty
+            throw new IllegalStateException("Cannot remove from empty queue.");
         }
-
     }
 
     /**
-     * Adds a new element to the end of the queue if it is not full.
+     * Adds a new visitor to the end of the queue if it is not full.
      *
      * @param visitorModel the VisitorModel to be added to the queue.
      * @return the current size of the queue after the operation , or -1 if the
@@ -54,7 +53,7 @@ public class CustomQueue {
      */
     public int enQueue(VisitorModel visitorModel) {
         if (isFull()) {
-            throw new IllegalStateException("Queue is full. No more visiotors for today."); // Indicates the queue is full.
+            throw new IllegalStateException("Queue is full. No more visiotors for today.");
         }
         queueList.addLast(visitorModel);
         return queueList.size();
@@ -84,7 +83,7 @@ public class CustomQueue {
      * @return a list containing all elements in the queue.
      */
     public LinkedList<VisitorModel> getQueueList() {
-        return new LinkedList<>(queueList); // Returns a copy of the internal queue
+        return new LinkedList<>(queueList);
     }
 
 }

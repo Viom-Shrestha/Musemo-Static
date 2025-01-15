@@ -22,7 +22,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="lblHomePageHeader" max="32767" attributes="0"/>
-              <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
+              <Component id="tbdPaneHome" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -30,7 +30,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="lblHomePageHeader" min="-2" pref="150" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTabbedPane1" min="-2" pref="700" max="-2" attributes="0"/>
+                  <Component id="tbdPaneHome" min="-2" pref="700" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -44,7 +44,7 @@
             </Property>
           </Properties>
         </Component>
-        <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+        <Container class="javax.swing.JTabbedPane" name="tbdPaneHome">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="84" green="7f" red="1" type="rgb"/>
@@ -280,8 +280,8 @@
                                           <Component id="lblLoginMessage1" alignment="1" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="1" attributes="0">
-                                                  <Component id="pwdFldAdminLogin" min="-2" pref="262" max="-2" attributes="0"/>
-                                                  <Component id="txtFldAdminLogin" min="-2" pref="262" max="-2" attributes="0"/>
+                                                  <Component id="pwdFldAdminPassword" min="-2" pref="262" max="-2" attributes="0"/>
+                                                  <Component id="txtFldAdminUsername" min="-2" pref="262" max="-2" attributes="0"/>
                                                   <Component id="btnLogin" alignment="1" min="-2" pref="262" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
@@ -314,9 +314,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblLoginError" min="-2" pref="23" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtFldAdminLogin" min="-2" pref="59" max="-2" attributes="0"/>
+                  <Component id="txtFldAdminUsername" min="-2" pref="59" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                  <Component id="pwdFldAdminLogin" min="-2" pref="59" max="-2" attributes="0"/>
+                  <Component id="pwdFldAdminPassword" min="-2" pref="59" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
                   <Component id="btnLogin" min="-2" pref="38" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -335,7 +335,7 @@
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="0" red="66" type="rgb"/>
+              <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Back"/>
           </Properties>
@@ -357,7 +357,7 @@
             <Property name="text" type="java.lang.String" value="Welcome"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtFldAdminLogin">
+        <Component class="javax.swing.JTextField" name="txtFldAdminUsername">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="3b" green="0" red="1" type="rgb"/>
@@ -381,7 +381,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JPasswordField" name="pwdFldAdminLogin">
+        <Component class="javax.swing.JPasswordField" name="pwdFldAdminPassword">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="3b" green="0" red="1" type="rgb"/>
@@ -620,7 +620,7 @@
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="715" max="-2" attributes="0"/>
-                                  <Component id="btnBackToHome1" max="32767" attributes="0"/>
+                                  <Component id="btnBackToDashboard" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -664,7 +664,7 @@
                       <Component id="lblManageArtifactsHeader" alignment="0" min="-2" pref="840" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spTblObjects" min="-2" pref="805" max="-2" attributes="0"/>
+                          <Component id="spTblArtifacts" min="-2" pref="805" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -680,7 +680,7 @@
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblTabletitle" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBackToHome1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBackToDashboard" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
@@ -706,11 +706,11 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="spTblObjects" min="-2" pref="346" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="spTblArtifacts" min="-2" pref="251" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
               </Group>
-              <Component id="pnlArtifactForm" alignment="0" pref="0" max="32767" attributes="0"/>
+              <Component id="pnlArtifactForm" alignment="0" pref="700" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -722,10 +722,10 @@
             </Property>
           </Properties>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="spTblObjects">
+        <Container class="javax.swing.JScrollPane" name="spTblArtifacts">
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="spTblObjects"/>
+              <ComponentRef name="spTblArtifacts"/>
             </Property>
           </AccessibilityProperties>
           <AuxValues>
@@ -1377,7 +1377,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btnBackToHome1">
+        <Component class="javax.swing.JButton" name="btnBackToDashboard">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -1391,7 +1391,7 @@
             <Property name="text" type="java.lang.String" value="Back"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackToHome1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackToDashboardActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbBoxSortBy">
@@ -1422,9 +1422,6 @@
               <Dimension value="[116, 43]"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbBoxSortByActionPerformed"/>
-          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -1456,9 +1453,6 @@
               <Dimension value="[104, 43]"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbBoxOrderByActionPerformed"/>
-          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -1598,7 +1592,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jScrollPane1" min="-2" pref="413" max="-2" attributes="0"/>
+                              <Component id="scrlPaneVisitorQueue" min="-2" pref="413" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="cmbBoxVisitorType" min="-2" pref="179" max="-2" attributes="0"/>
@@ -1610,16 +1604,16 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lblVisitorQueueCountLabel1" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                                          <Component id="lblVisitorQueueCount" min="-2" pref="50" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                           <Component id="btnNextVisitor" min="-2" pref="132" max="-2" attributes="0"/>
                                       </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                                          <Component id="lblVisitorQueueCount" min="-2" pref="86" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" min="-2" pref="413" max="-2" attributes="0"/>
+                                  <Component id="scrlPaneVisitorArchive" min="-2" pref="413" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="btnAddVisitor" min="-2" pref="192" max="-2" attributes="0"/>
@@ -1650,7 +1644,7 @@
                           <EmptySpace min="525" pref="525" max="-2" attributes="0"/>
                           <Component id="lblVisitorQueue" min="-2" pref="168" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="btnBackToHome2" min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="btnBackToDashboard2" min="-2" pref="90" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1683,25 +1677,24 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="btnBackToHome2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBackToDashboard2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane1" min="-2" pref="225" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="scrlPaneVisitorQueue" alignment="1" min="-2" pref="205" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
                                   <Component id="lblVisitorQueueCountLabel1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="lblVisitorQueueCount" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                                   <Component id="btnNextVisitor" min="-2" pref="40" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane2" min="-2" pref="225" max="-2" attributes="0"/>
+                              <Component id="scrlPaneVisitorArchive" min="-2" pref="205" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtFldVisitorId" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
                               <Component id="txtFldVisitorName" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
@@ -1736,7 +1729,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnBackToHome2">
+        <Component class="javax.swing.JButton" name="btnBackToDashboard2">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -1745,12 +1738,12 @@
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="0" red="66" type="rgb"/>
+              <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Back"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackToHome2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackToDashboard2ActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblVisitorQueue">
@@ -1772,7 +1765,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="3"/>
+            <Property name="text" type="java.lang.String" value="5"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblVisitorQueueCountLabel1">
@@ -1814,7 +1807,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNextVisitorActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+        <Container class="javax.swing.JScrollPane" name="scrlPaneVisitorQueue">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -1868,7 +1861,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+        <Container class="javax.swing.JScrollPane" name="scrlPaneVisitorArchive">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -1925,7 +1918,7 @@
         <Component class="javax.swing.JTextField" name="txtFldVisitorName">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="99" red="66" type="rgb"/>
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -1950,7 +1943,7 @@
         <Component class="javax.swing.JComboBox" name="cmbBoxVisitorType">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="99" red="66" type="rgb"/>
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -1981,7 +1974,7 @@
         <Component class="javax.swing.JTextField" name="txtFldVisitorId">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="99" red="66" type="rgb"/>
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2006,7 +1999,7 @@
         <Component class="javax.swing.JComboBox" name="cmbBoxGender">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="99" red="66" type="rgb"/>
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2199,7 +2192,7 @@
               <Color blue="33" green="33" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="33" green="33" red="ff" type="rgb"/>
+              <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>

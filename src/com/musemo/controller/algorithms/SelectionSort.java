@@ -13,6 +13,10 @@ public class SelectionSort {
 
     List<ArtifactModel> artifactSortList;
 
+    /**
+     * Default class constructor for initializing a new ArrayList for storing
+     * sorted artifact list.
+     */
     public SelectionSort() {
         artifactSortList = new ArrayList<>();
     }
@@ -40,7 +44,6 @@ public class SelectionSort {
                 swap(artifactSortList, i, extremumIndex);
             }
         }
-
         return artifactSortList;
     }
 
@@ -62,7 +65,6 @@ public class SelectionSort {
                 extremumIndex = j;
             }
         }
-
         return extremumIndex;
     }
 
@@ -86,7 +88,7 @@ public class SelectionSort {
      *
      * @param artifactSortList the list of ArtifactModel objects
      * @param i the index of the first element
-     * @param j the index of the second element
+     * @param j the index of the extremum element
      */
     private void swap(List<ArtifactModel> artifactSortList, int i, int j) {
         ArtifactModel temp = artifactSortList.get(i);

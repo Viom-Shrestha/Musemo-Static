@@ -47,7 +47,7 @@ public class ValidationUtil {
     public static boolean isValidArtifactId(int artifactId) {
         return ARTIFACT_ID_PATTERN.matcher(String.valueOf(artifactId)).matches();
     }
-    
+
     /**
      * Validates if the Visitor ID is exactly 5 digits.
      *
