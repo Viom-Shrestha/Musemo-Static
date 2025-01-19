@@ -1137,7 +1137,7 @@ public class Musemo extends javax.swing.JFrame {
         setIconImages(null);
         setLocation(new java.awt.Point(100, 50));
         setMinimumSize(new java.awt.Dimension(1300, 720));
-        setPreferredSize(new java.awt.Dimension(1312, 720));
+        setPreferredSize(new java.awt.Dimension(1300, 720));
         setResizable(false);
 
         pnlLoadingScreen.setBackground(new java.awt.Color(0, 0, 0));
@@ -1164,7 +1164,7 @@ public class Musemo extends javax.swing.JFrame {
         lblLoadingTitle.setText("MUSEMO");
         pnlLoadingScreen.add(lblLoadingTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, 620, 200));
 
-        lblLoadingScreenGif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/loading screen.gif"))); // NOI18N
+        lblLoadingScreenGif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/loadingScreen.gif"))); // NOI18N
         pnlLoadingScreen.add(lblLoadingScreenGif, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 0, 1080, 700));
 
         lblCopyRight.setBackground(new java.awt.Color(255, 255, 255));
@@ -1294,7 +1294,7 @@ public class Musemo extends javax.swing.JFrame {
             @Override
             protected Void doInBackground() throws Exception {
                 for (int i = 0; i <= 100; i++) {
-                    Thread.sleep(10); // Simulated delay for progress bar
+                    Thread.sleep(100); // Simulated delay for progress bar
                     publish(i); // Publish progress
                 }
                 return null;
