@@ -112,8 +112,8 @@ public class MergeSort {
     /**
      * Compares floor numbers of two ArtifactModel objects based on sort order.
      *
-     * @param a first ArtifactModel
-     * @param b second ArtifactModel
+     * @param a first ArtifactModel object
+     * @param b second ArtifactModel object
      * @param isDesc specifies the sort order
      * @return positive if a greater than b, negative if a less than b, 0 if
      * equal (reversed for descending)

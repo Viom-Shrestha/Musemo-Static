@@ -9,10 +9,12 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,6 +31,7 @@ public class Musemo extends javax.swing.JFrame {
     private CustomQueue queueList;
     private final Color errorColor;
     private final Color greenColor;
+    private final Color normalColor;
 
     /**
      * Creates new form Musemo.
@@ -37,6 +40,7 @@ public class Musemo extends javax.swing.JFrame {
         initComponents();
         errorColor = new Color(255, 51, 0);
         greenColor = new Color(0, 255, 102);
+        normalColor = new Color(255, 255, 255);
         initializeLayout(); // Sets up CardLayout and pages
         initializaData(); // Initialize data and tables
         startProgress(); // Simulates the loading bar
@@ -161,7 +165,10 @@ public class Musemo extends javax.swing.JFrame {
 
         scrlPaneHome.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrlPaneHome.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrlPaneHome.setPreferredSize(new java.awt.Dimension(1300, 500));
 
+        pnlHome.setMinimumSize(new java.awt.Dimension(1300, 700));
+        pnlHome.setPreferredSize(new java.awt.Dimension(1300, 850));
         pnlHome.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnAdminLogin.setBackground(new java.awt.Color(153, 153, 255));
@@ -176,6 +183,9 @@ public class Musemo extends javax.swing.JFrame {
         pnlHome.add(btnAdminLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
         lblHomePageWelcome1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/musemo/resources/homePageImg.png"))); // NOI18N
+        lblHomePageWelcome1.setMaximumSize(new java.awt.Dimension(1300, 700));
+        lblHomePageWelcome1.setMinimumSize(new java.awt.Dimension(1300, 700));
+        lblHomePageWelcome1.setPreferredSize(new java.awt.Dimension(1300, 700));
         pnlHome.add(lblHomePageWelcome1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 750));
 
         scrlPaneHome.setViewportView(pnlHome);
@@ -502,7 +512,7 @@ public class Musemo extends javax.swing.JFrame {
         txtFldArtifactId.setBackground(new java.awt.Color(0, 0, 0));
         txtFldArtifactId.setForeground(new java.awt.Color(255, 255, 255));
         txtFldArtifactId.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Artifact Id", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
-        txtFldArtifactId.setCaretColor(new java.awt.Color(0, 102, 102));
+        txtFldArtifactId.setCaretColor(new java.awt.Color(255, 255, 255));
 
         txtFldArtifactName.setBackground(new java.awt.Color(0, 0, 0));
         txtFldArtifactName.setForeground(new java.awt.Color(255, 255, 255));
@@ -519,6 +529,7 @@ public class Musemo extends javax.swing.JFrame {
         txtFldCreator.setForeground(new java.awt.Color(255, 255, 255));
         txtFldCreator.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Creator", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         txtFldCreator.setCaretColor(new java.awt.Color(0, 102, 102));
+        txtFldCreator.setDisabledTextColor(new java.awt.Color(255, 255, 255));
 
         txtFldStatus.setBackground(new java.awt.Color(0, 0, 0));
         txtFldStatus.setForeground(new java.awt.Color(255, 255, 255));
@@ -674,9 +685,9 @@ public class Musemo extends javax.swing.JFrame {
                     .addComponent(txtFldArtifactId, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbBoxArtifactType, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
-                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblErrorMsgArtifactType, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(lblErrorMsgArtifactId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlArtifactFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblErrorMsgArtifactType, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblErrorMsgArtifactId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtFldArtifactName, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -967,23 +978,23 @@ public class Musemo extends javax.swing.JFrame {
         }
 
         txtFldVisitorName.setBackground(new java.awt.Color(255, 255, 255));
-        txtFldVisitorName.setForeground(new java.awt.Color(255, 255, 255));
+        txtFldVisitorName.setForeground(new java.awt.Color(0, 0, 0));
         txtFldVisitorName.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Visitor Name", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         txtFldVisitorName.setCaretColor(new java.awt.Color(0, 102, 102));
 
         cmbBoxVisitorType.setBackground(new java.awt.Color(255, 255, 255));
-        cmbBoxVisitorType.setForeground(new java.awt.Color(255, 255, 255));
+        cmbBoxVisitorType.setForeground(new java.awt.Color(0, 0, 0));
         cmbBoxVisitorType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Teacher", "Artist", "Historian", "Researcher", "Others" }));
         cmbBoxVisitorType.setSelectedIndex(-1);
         cmbBoxVisitorType.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Visitor Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
 
         txtFldVisitorId.setBackground(new java.awt.Color(255, 255, 255));
-        txtFldVisitorId.setForeground(new java.awt.Color(255, 255, 255));
+        txtFldVisitorId.setForeground(new java.awt.Color(0, 0, 0));
         txtFldVisitorId.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255)), "Visitor Id", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         txtFldVisitorId.setCaretColor(new java.awt.Color(0, 102, 102));
 
         cmbBoxGender.setBackground(new java.awt.Color(255, 255, 255));
-        cmbBoxGender.setForeground(new java.awt.Color(255, 255, 255));
+        cmbBoxGender.setForeground(new java.awt.Color(0, 0, 0));
         cmbBoxGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female", "Others" }));
         cmbBoxGender.setSelectedIndex(-1);
         cmbBoxGender.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Gender", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
@@ -1371,10 +1382,20 @@ public class Musemo extends javax.swing.JFrame {
         loadScreen("AdminLoginScreen");
     }//GEN-LAST:event_btnAdminLoginActionPerformed
 
+    /**
+     * Method to load Visitor Management Page.
+     *
+     * @param evt
+     */
     private void btnManageVisitorQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageVisitorQueueActionPerformed
         loadScreen("VisitorManagementScreen");
     }//GEN-LAST:event_btnManageVisitorQueueActionPerformed
 
+    /**
+     * Method to go back to dashboard page from visitor management page.
+     *
+     * @param evt
+     */
     private void btnBackToDashboard2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToDashboard2ActionPerformed
         loadScreen("DashboardScreen");
     }//GEN-LAST:event_btnBackToDashboard2ActionPerformed
@@ -1406,6 +1427,8 @@ public class Musemo extends javax.swing.JFrame {
                     artifact.setRoomNo(Short.parseShort(txtFldRoom.getText()));
                     loadListToArtifactTable(artifactList);
                     found = true;
+                    showDialogBox("Artifact updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    clearArtifactForm();
                     break;
                 }
             }
@@ -1448,10 +1471,10 @@ public class Musemo extends javax.swing.JFrame {
             } else {
                 // Add the Artifact if no duplicate is found
                 artifactList.add(newArtifact);
-                clearArtifactForm();
                 loadListToArtifactTable(artifactList);
                 txtFldArtifactId.setBorder(createTitledBorder(greenColor, "Artifact ID"));
                 showDialogBox("Artifact added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearArtifactForm();
             }
         }
     }//GEN-LAST:event_btnAddArtifactActionPerformed
@@ -1552,7 +1575,7 @@ public class Musemo extends javax.swing.JFrame {
                     errorColor, greenColor, ValidationUtil.isValidVisitorId(Integer.parseInt(txtFldVisitorId.getText()))
             );
         } catch (NumberFormatException e) {
-            isValid &= validateField(txtFldVisitorId, "Visitor Id", lblErrorMsgVisitorId, "Field cannot be empty",
+            isValid &= validateField(txtFldVisitorId, "Visitor Id", lblErrorMsgVisitorId, "Invalid input",
                     errorColor, greenColor, false
             );
         }
@@ -1574,37 +1597,39 @@ public class Musemo extends javax.swing.JFrame {
                 errorColor, greenColor, ValidationUtil.isValidComboBoxSelection(cmbBoxGender.getSelectedIndex())
         );
 
-        if (isValid && !isFull) {
+        if (isValid) {
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Are you sure you want to add visitor to queue with this id? This can not be removed or changed",
                     "Confirm queue",
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                // Create a VisitorModel instance
-                VisitorModel newVisitor = new VisitorModel(
-                        Integer.parseInt(txtFldVisitorId.getText().trim()),
-                        txtFldVisitorName.getText().trim(),
-                        cmbBoxVisitorType.getSelectedItem().toString().trim(),
-                        cmbBoxGender.getSelectedItem().toString().trim()
-                );
+                if (!isFull) {
+                    // Create a VisitorModel instance
+                    VisitorModel newVisitor = new VisitorModel(
+                            Integer.parseInt(txtFldVisitorId.getText().trim()),
+                            txtFldVisitorName.getText().trim(),
+                            cmbBoxVisitorType.getSelectedItem().toString().trim(),
+                            cmbBoxGender.getSelectedItem().toString().trim()
+                    );
 
-                // Check for duplicate Visitor ID
-                if (checkDuplicateVisitor(newVisitor)) {
-                    txtFldVisitorId.setBorder(createTitledBorder(errorColor, "Visitor ID"));
-                    showDialogBox("Visitor with this ID already exists.", "Duplicate Entry!",
-                            JOptionPane.WARNING_MESSAGE);
+                    // Check for duplicate Visitor ID
+                    if (checkDuplicateVisitor(newVisitor)) {
+                        txtFldVisitorId.setBorder(createTitledBorder(errorColor, "Visitor ID"));
+                        showDialogBox("Visitor with this ID already exists.", "Duplicate Entry!",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        queueList.enQueue(newVisitor);  
+                        loadListToVisitorQueueTable(queueList);
+                        txtFldVisitorId.setBorder(createTitledBorder(greenColor, "Visitor ID"));
+                        showDialogBox("Visitor added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        lblVisitorQueueCount.setText(String.valueOf(queueList.poll()));
+                        clearVisitorForm();
+                    }
                 } else {
-                    queueList.enQueue(newVisitor);
-                    clearVisitorForm();
-                    loadListToVisitorQueueTable(queueList);
-                    txtFldVisitorId.setBorder(createTitledBorder(greenColor, "Visitor ID"));
-                    showDialogBox("Visitor added successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    lblVisitorQueueCount.setText(String.valueOf(queueList.poll()));
+                    showDialogBox("Queue is full, no more Visitors for now.", "Queue is Full!",
+                            JOptionPane.WARNING_MESSAGE);
                 }
             }
-        } else {
-            showDialogBox("Queue is full, no more Visitors for now.", "Queue is Full!",
-                    JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnAddVisitorActionPerformed
 
@@ -1860,6 +1885,7 @@ public class Musemo extends javax.swing.JFrame {
      * once. Also Clears the error messages.
      */
     private void clearArtifactForm() {
+        // Clear the input fields along with their error messages.
         txtFldArtifactId.setText("");
         lblErrorMsgArtifactId.setText("");
         txtFldArtifactName.setText("");
@@ -1878,13 +1904,24 @@ public class Musemo extends javax.swing.JFrame {
         lblErrorMsgFloor.setText("");
         txtFldRoom.setText("");
         lblErrorMsgRoomNo.setText("");
+        // Highlight the cleared fields
+        txtFldArtifactId.setBorder(createTitledBorder(normalColor, "Artifact Id"));
+        txtFldArtifactName.setBorder(createTitledBorder(normalColor, "Artifact Name"));
+        cmbBoxArtifactType.setBorder(createTitledBorder(normalColor, "Artifact Type"));
+        txtFldCreator.setBorder(createTitledBorder(normalColor, "Creator"));
+        txtFldOrigin.setBorder(createTitledBorder(normalColor, "Origin"));
+        txtFldStatus.setBorder(createTitledBorder(normalColor, "Status"));
+        cmbBoxCondition.setBorder(createTitledBorder(normalColor, "Condition"));
+        txtFldFloor.setBorder(createTitledBorder(normalColor, "Floor"));
+        txtFldRoom.setBorder(createTitledBorder(normalColor, "Room"));
     }
 
     /**
      * Method to clear all the entered data from the visitor text fields all at
-     * once
+     * once.
      */
     private void clearVisitorForm() {
+        // Clear the input fields and their error messages.
         txtFldVisitorId.setText("");
         lblErrorMsgVisitorId.setText("");
         txtFldVisitorName.setText("");
@@ -1893,6 +1930,11 @@ public class Musemo extends javax.swing.JFrame {
         lblErrorMsgVisitorType.setText("");
         cmbBoxGender.setSelectedIndex(-1);
         lblErrorMsgGender.setText("");
+        // Highlight the cleared fields
+        txtFldVisitorId.setBorder(createTitledBorder(Color.BLACK, "Visitor Id"));
+        txtFldVisitorName.setBorder(createTitledBorder(Color.BLACK, "Visitor Name"));
+        cmbBoxVisitorType.setBorder(createTitledBorder(Color.BLACK, "Visitor Type"));
+        cmbBoxGender.setBorder(createTitledBorder(Color.BLACK, "Gender"));
     }
 
     /**
@@ -2040,18 +2082,20 @@ public class Musemo extends javax.swing.JFrame {
      * @param title the title text for the border
      * @return a TitledBorder instance
      */
-    private javax.swing.border.TitledBorder createTitledBorder(Color color, String title) {
-        return javax.swing.BorderFactory.createTitledBorder(
-                javax.swing.BorderFactory.createLineBorder(color, 2),
+    private TitledBorder createTitledBorder(Color color, String title) {
+        return BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(color, 2),
                 title,
-                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-                javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
                 new java.awt.Font("Segoe UI", 1, 12),
                 color
         );
     }
 
     /**
+     * Main method.
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -2061,18 +2105,26 @@ public class Musemo extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Musemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Musemo.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Musemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Musemo.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Musemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Musemo.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Musemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Musemo.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

@@ -27,7 +27,7 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            int mid = (left + right) / 2;
             int midFloor = sortedList.get(mid).getFloor();
 
             if (midFloor == targetFloor) {
@@ -71,7 +71,7 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            int mid = (left + right) / 2;
             int midId = sortedList.get(mid).getArtifactId();
 
             if (midId == targetArtifactId) {
@@ -103,7 +103,7 @@ public class BinarySearch {
         int right = sortedList.size() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            int mid = (left + right) / 2;
             String midName = sortedList.get(mid).getArtifactName().trim();
             int compareName = midName.compareToIgnoreCase(targetArtifactName);
             if (compareName == 0) {
